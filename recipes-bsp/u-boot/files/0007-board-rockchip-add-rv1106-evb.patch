@@ -1,0 +1,42 @@
+Upstream-Status: Inappropriate
+
+Signed-off-by: Raman Rakavets <radikot88@gmail.com>
+diff --git a/board/rockchip/evb_rv1106/Kconfig b/board/rockchip/evb_rv1106/Kconfig
+new file mode 100644
+index 00000000000..f17dd135dd1
+--- /dev/null
++++ b/board/rockchip/evb_rv1106/Kconfig
+@@ -0,0 +1,12 @@
++if TARGET_EVB_RV1106
++
++config SYS_BOARD
++	default "evb_rv1106"
++
++config SYS_VENDOR
++	default "rockchip"
++
++config SYS_CONFIG_NAME
++	default "evb_rv1106"
++
++endif
+diff --git a/include/configs/evb_rv1106.h b/include/configs/evb_rv1106.h
+new file mode 100644
+index 00000000000..9c83622d611
+--- /dev/null
++++ b/include/configs/evb_rv1106.h
+@@ -0,0 +1,15 @@
++/* SPDX-License-Identifier: GPL-2.0+ */
++/*
++ * Copyright (c) 2022 Rockchip Electronics Co., Ltd.
++ */
++
++#ifndef __EVB_RV1106_H
++#define __EVB_RV1106_H
++
++#define ROCKCHIP_DEVICE_SETTINGS \
++			"stdout=serial,vidconsole\0" \
++			"stderr=serial,vidconsole\0"
++
++#include <configs/rv1106_common.h>
++
++#endif /* __EVB_RV1106_H */

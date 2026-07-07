@@ -1,0 +1,23 @@
+Upstream-Status: Inappropriate
+
+Signed-off-by: Raman Rakavets <radikot88@gmail.com>
+diff --git a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+index 4b8709e9e179..9dff606b5547 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
++++ b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+@@ -24,6 +24,7 @@ properties:
+       - rockchip,rk3568-usb2phy
+       - rockchip,rk3576-usb2phy
+       - rockchip,rk3588-usb2phy
++      - rockchip,rv1103-usb2phy
+       - rockchip,rv1106-usb2phy
+       - rockchip,rv1108-usb2phy
+ 
+@@ -224,6 +225,7 @@ allOf:
+         compatible:
+           contains:
+             enum:
++              - rockchip,rv1103-usb2phy
+               - rockchip,rv1106-usb2phy
+     then:
+       properties:

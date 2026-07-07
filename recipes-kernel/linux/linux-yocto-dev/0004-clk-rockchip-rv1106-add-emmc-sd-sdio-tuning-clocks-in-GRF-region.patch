@@ -1,0 +1,160 @@
+Upstream-Status: Inappropriate
+
+Signed-off-by: Raman Rakavets <radikot88@gmail.com>
+diff --git a/drivers/clk/rockchip/clk-rv1106.c b/drivers/clk/rockchip/clk-rv1106.c
+index 913da2fe78a2..06d972deed4a 100644
+--- a/drivers/clk/rockchip/clk-rv1106.c
++++ b/drivers/clk/rockchip/clk-rv1106.c
+@@ -9,6 +9,8 @@
+ #include <linux/of.h>
+ #include <linux/of_device.h>
+ #include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
++#include <linux/minmax.h>
+ 
+ #include <dt-bindings/clock/rockchip,rv1106-cru.h>
+ 
+@@ -923,10 +925,36 @@ static struct rockchip_clk_branch rv1106_clk_branches[] __initdata = {
+ 			RV1106_PERICLKGATE_CON(4), 9, GFLAGS),
+ };
+ 
++static struct rockchip_clk_branch rv1106_peri_clk_branches[] __initdata = {
++	MMC_GRF(SCLK_EMMC_DRV, "emmc_drv", "cclk_src_emmc",
++			RV1106_EMMC_CON(0), 1, grf_type_peri),
++	MMC_GRF(SCLK_EMMC_SAMPLE, "emmc_sample", "cclk_src_emmc",
++			RV1106_EMMC_CON(1), 1, grf_type_peri),
++};
++
++static struct rockchip_clk_branch rv1106_vi_clk_branches[] __initdata = {
++	MMC_GRF(SCLK_SDMMC_DRV, "sdmmc_drv", "cclk_src_sdmmc",
++			RV1106_SDMMC_CON(0), 1, grf_type_vi),
++	MMC_GRF(SCLK_SDMMC_SAMPLE, "sdmmc_sample", "cclk_src_sdmmc",
++			RV1106_SDMMC_CON(1), 1, grf_type_vi),
++};
++
++static struct rockchip_clk_branch rv1106_vo_clk_branches[] __initdata = {
++	MMC_GRF(SCLK_SDIO_DRV, "sdio_drv", "cclk_src_sdio",
++			RV1106_SDIO_CON(0), 1, grf_type_vo),
++	MMC_GRF(SCLK_SDIO_SAMPLE, "sdio_sample", "cclk_src_sdio",
++			RV1106_SDIO_CON(1), 1, grf_type_vo),
++};
++
+ static int __init clk_rv1106_probe(struct platform_device *pdev)
+ {
++	unsigned long nr_peri_branches = ARRAY_SIZE(rv1106_peri_clk_branches);
++	unsigned long nr_vi_branches = ARRAY_SIZE(rv1106_vi_clk_branches);
++	unsigned long nr_vo_branches = ARRAY_SIZE(rv1106_vo_clk_branches);
+ 	unsigned long nr_branches = ARRAY_SIZE(rv1106_clk_branches);
+-	unsigned long nr_clks;
++	unsigned long nr_clks, nr_peri_clks, nr_vi_clks, nr_vo_clks;
++	struct rockchip_aux_grf *peri_grf_e, *vi_grf_e, *vo_grf_e;
++	struct regmap *peri_grf, *vi_grf, *vo_grf;
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *np = dev->of_node;
+ 	struct rockchip_clk_provider *ctx;
+@@ -940,6 +968,36 @@ static int __init clk_rv1106_probe(struct platform_device *pdev)
+ 	nr_clks = rockchip_clk_find_max_clk_id(rv1106_clk_branches,
+ 					       nr_branches) + 1;
+ 
++	peri_grf = syscon_regmap_lookup_by_compatible("rockchip,rv1106-peri-grf");
++	if (!IS_ERR(peri_grf)) {
++		nr_peri_clks = rockchip_clk_find_max_clk_id(rv1106_peri_clk_branches,
++							    nr_peri_branches) + 1;
++		nr_clks = max(nr_clks, nr_peri_clks);
++	} else if (PTR_ERR(peri_grf) != -ENODEV) {
++		return dev_err_probe(dev, PTR_ERR(peri_grf),
++				     "failed to look up PERI GRF\n");
++	}
++
++	vi_grf = syscon_regmap_lookup_by_compatible("rockchip,rv1106-vi-grf");
++	if (!IS_ERR(vi_grf)) {
++		nr_vi_clks = rockchip_clk_find_max_clk_id(rv1106_vi_clk_branches,
++							  nr_vi_branches) + 1;
++		nr_clks = max(nr_clks, nr_vi_clks);
++	} else if (PTR_ERR(vi_grf) != -ENODEV) {
++		return dev_err_probe(dev, PTR_ERR(vi_grf),
++				     "failed to look up VI GRF\n");
++	}
++
++	vo_grf = syscon_regmap_lookup_by_compatible("rockchip,rv1106-vo-grf");
++	if (!IS_ERR(vo_grf)) {
++		nr_vo_clks = rockchip_clk_find_max_clk_id(rv1106_vo_clk_branches,
++							  nr_vo_branches) + 1;
++		nr_clks = max(nr_clks, nr_vo_clks);
++	} else if (PTR_ERR(vo_grf) != -ENODEV) {
++		return dev_err_probe(dev, PTR_ERR(vo_grf),
++				     "failed to look up VO GRF\n");
++	}
++
+ 	ctx = rockchip_clk_init(np, reg_base, nr_clks);
+ 	if (IS_ERR(ctx))
+ 		return dev_err_probe(dev, PTR_ERR(ctx),
+@@ -957,6 +1015,45 @@ static int __init clk_rv1106_probe(struct platform_device *pdev)
+ 	rockchip_clk_register_branches(ctx, rv1106_clk_branches,
+ 				       ARRAY_SIZE(rv1106_clk_branches));
+ 
++	if (!IS_ERR(peri_grf)) {
++		peri_grf_e = devm_kzalloc(dev, sizeof(*peri_grf_e), GFP_KERNEL);
++		if (!peri_grf_e)
++			return -ENOMEM;
++
++		peri_grf_e->grf	= peri_grf;
++		peri_grf_e->type	= grf_type_peri;
++		hash_add(ctx->aux_grf_table, &peri_grf_e->node, grf_type_peri);
++
++		rockchip_clk_register_branches(ctx, rv1106_peri_clk_branches,
++					       nr_peri_branches);
++	}
++
++	if (!IS_ERR(vi_grf)) {
++		vi_grf_e = devm_kzalloc(dev, sizeof(*vi_grf_e), GFP_KERNEL);
++		if (!vi_grf_e)
++			return -ENOMEM;
++
++		vi_grf_e->grf	= vi_grf;
++		vi_grf_e->type	= grf_type_vi;
++		hash_add(ctx->aux_grf_table, &vi_grf_e->node, grf_type_vi);
++
++		rockchip_clk_register_branches(ctx, rv1106_vi_clk_branches,
++					       nr_vi_branches);
++	}
++
++	if (!IS_ERR(vo_grf)) {
++		vo_grf_e = devm_kzalloc(dev, sizeof(*vo_grf_e), GFP_KERNEL);
++		if (!vo_grf_e)
++			return -ENOMEM;
++
++		vo_grf_e->grf	= vo_grf;
++		vo_grf_e->type	= grf_type_vo;
++		hash_add(ctx->aux_grf_table, &vo_grf_e->node, grf_type_vo);
++
++		rockchip_clk_register_branches(ctx, rv1106_vo_clk_branches,
++					       nr_vo_branches);
++	}
++
+ 	rv1106_rst_init(np, reg_base);
+ 
+ 	rockchip_register_restart_notifier(ctx, RV1106_GLB_SRST_FST, NULL);
+diff --git a/drivers/clk/rockchip/clk.h b/drivers/clk/rockchip/clk.h
+index 813c99fb5ef1..2e831b2d2661 100644
+--- a/drivers/clk/rockchip/clk.h
++++ b/drivers/clk/rockchip/clk.h
+@@ -138,6 +138,9 @@ struct clk;
+ #define RV1106_SOFTRST_CON(x)		((x) * 0x4 + 0xa00 + RV1106_TOPCRU_BASE)
+ #define RV1106_GLB_SRST_FST		(0xc08 + RV1106_TOPCRU_BASE)
+ #define RV1106_GLB_SRST_SND		(0xc0c + RV1106_TOPCRU_BASE)
++#define RV1106_EMMC_CON(x)		((x) * 0x4 + 0x20)
++#define RV1106_SDMMC_CON(x)		((x) * 0x4 + 0x4)
++#define RV1106_SDIO_CON(x)		((x) * 0x4 + 0x1c)
+ #define RV1106_PERICLKSEL_CON(x)	((x) * 0x4 + 0x300 + RV1106_PERICRU_BASE)
+ #define RV1106_PERICLKGATE_CON(x)	((x) * 0x4 + 0x800 + RV1106_PERICRU_BASE)
+ #define RV1106_PERISOFTRST_CON(x)	((x) * 0x4 + 0xa00 + RV1106_PERICRU_BASE)
+@@ -631,6 +634,8 @@ enum rockchip_grf_type {
+ 	grf_type_ioc,
+ 	grf_type_vo,
+ 	grf_type_vpu,
++	grf_type_peri,
++	grf_type_vi,
+ };
+ 
+ /* ceil(sqrt(enums in rockchip_grf_type - 1)) */

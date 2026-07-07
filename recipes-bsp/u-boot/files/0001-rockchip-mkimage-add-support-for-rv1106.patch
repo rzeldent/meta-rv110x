@@ -1,0 +1,15 @@
+Upstream-Status: Inappropriate
+
+Signed-off-by: Raman Rakavets <radikot88@gmail.com>
+diff --git a/tools/rkcommon.c b/tools/rkcommon.c
+index e7e78ef7e5b..aa0b7ba8df0 100644
+--- a/tools/rkcommon.c
++++ b/tools/rkcommon.c
+@@ -148,6 +148,7 @@ static struct spl_info spl_infos[] = {
+ 	{ "rk3328", "RK32", 0x8000 - 0x800, false, RK_HEADER_V1 },
+ 	{ "rk3368", "RK33", 0x8000 - 0x1000, false, RK_HEADER_V1 },
+ 	{ "rk3399", "RK33", 0x30000 - 0x2000, false, RK_HEADER_V1 },
++	{ "rv1106", "RKNS", 0x10000 - 0x1000, false, RK_HEADER_V2 },
+ 	{ "rv1108", "RK11", 0x1800, false, RK_HEADER_V1 },
+ 	{ "rv1126", "110B", 0x10000 - 0x1000, false, RK_HEADER_V1 },
+ 	{ "rk3528", "RK35", 0x10000 - 0x1000, false, RK_HEADER_V2 },

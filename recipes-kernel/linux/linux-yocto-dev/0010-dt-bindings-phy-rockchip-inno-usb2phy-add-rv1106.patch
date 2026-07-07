@@ -1,0 +1,43 @@
+Upstream-Status: Inappropriate
+
+Signed-off-by: Raman Rakavets <radikot88@gmail.com>
+diff --git a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+index 58e735b5dd05..4b8709e9e179 100644
+--- a/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
++++ b/Documentation/devicetree/bindings/phy/rockchip,inno-usb2phy.yaml
+@@ -24,6 +24,7 @@ properties:
+       - rockchip,rk3568-usb2phy
+       - rockchip,rk3576-usb2phy
+       - rockchip,rk3588-usb2phy
++      - rockchip,rv1106-usb2phy
+       - rockchip,rv1108-usb2phy
+ 
+   reg:
+@@ -46,6 +47,7 @@ properties:
+       - const: phyclk
+       - const: aclk
+       - const: aclk_slv
++      - const: pclk
+ 
+   assigned-clocks:
+     description:
+@@ -217,6 +219,19 @@ allOf:
+         clock-names:
+           minItems: 3
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - rockchip,rv1106-usb2phy
++    then:
++      properties:
++        clocks:
++          minItems: 2
++        clock-names:
++          minItems: 2
++
+ additionalProperties: false
+ 
+ examples:

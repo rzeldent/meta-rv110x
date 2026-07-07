@@ -13,13 +13,9 @@
 	};
 
 	rng: rng@ff448000 {
-		compatible = "rockchip,trngv1";
+		compatible = "rockchip,rk3588-rng";
 		reg = <0xff448000 0x200>;
 	};
-};
-
-&grf {
-	bootph-all;
 };
 
 &pmuioc {
@@ -27,10 +23,6 @@
 };
 
 &cru {
-	bootph-all;
-};
-
-&saradc {
 	bootph-all;
 };
 
@@ -54,16 +46,12 @@
 	bootph-pre-ram;
 };
 
-&usbdrd {
+&usbdrd3 {
 	bootph-all;
 };
 
 &usbdrd_dwc3 {
 	bootph-all;
-};
-
-&grf_cru {
-	bootph-pre-ram;
 };
 
 &gpio0 {

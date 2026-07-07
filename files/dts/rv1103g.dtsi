@@ -15,14 +15,6 @@
 
 /delete-node/ &gpio2;
 
-&cpu0_opp_table {
-	/delete-node/ opp-1200000000;
-	/delete-node/ opp-1296000000;
-	/delete-node/ opp-1416000000;
-	/delete-node/ opp-1512000000;
-	/delete-node/ opp-1608000000;
-};
-
 &cru {
 	assigned-clocks =
 		<&cru PLL_GPLL>, <&cru PLL_CPLL>,

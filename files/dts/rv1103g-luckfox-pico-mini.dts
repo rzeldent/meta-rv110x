@@ -11,15 +11,16 @@
 	model = "Luckfox Pico Mini";
 	compatible = "rockchip,rv1103g-luckfox-pico-mini", "rockchip,rv1103";	
 
-	chosen {
-		stdout-path = "serial2:115200n8";
-	};
-
 	aliases {
 		ethernet0 = &gmac;
 		mmc0 = &emmc;
 		mmc1 = &sdmmc;
 		mmc2 = &sdio;
+		serial2 = &uart2;
+	};
+
+	chosen {
+		stdout-path = "serial2:115200n8";
 	};
 
 	vcc_1v8: vcc-1v8 {
@@ -68,6 +69,7 @@
 };
 
 &gmac {
+	clock_in_out = "input";
 	phy-supply = <&vcc_3v3>;
 	tx_delay = <0x30>;
 	rx_delay = <0x10>;
@@ -82,8 +84,6 @@
 	cap-mmc-highspeed;
 	cap-sd-highspeed;
 	disable-wp;
-	pinctrl-names = "default";
-	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_det &sdmmc0_bus4>;
 	status = "okay";
 };
 
@@ -97,11 +97,6 @@
 		spi-rx-bus-width = <4>;
 		spi-tx-bus-width = <1>;
 	};
-};
-
-&saradc {
-	status = "okay";
-	vref-supply = <&vcc_1v8>;
 };
 
 &i2c3 {
@@ -132,15 +127,12 @@
 	status = "okay";
 };
 
-&csi_dphy {
-	status = "okay";
-};
-
-&usbdrd {
+&usbdrd3 {
 	status = "okay";
 };
 
 &usbdrd_dwc3 {
+	dr_mode = "peripheral";
 	extcon = <&u2phy>;
 	status = "okay";
 };

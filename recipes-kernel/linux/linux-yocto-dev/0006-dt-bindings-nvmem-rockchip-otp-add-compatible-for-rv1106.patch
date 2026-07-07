@@ -1,0 +1,65 @@
+Upstream-Status: Inappropriate
+
+Signed-off-by: Raman Rakavets <radikot88@gmail.com>
+diff --git a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
+index 7e4d5e1c4ced..6befe3e0bbb4 100644
+--- a/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
++++ b/Documentation/devicetree/bindings/nvmem/rockchip,otp.yaml
+@@ -19,6 +19,7 @@ properties:
+       - rockchip,rk3568-otp
+       - rockchip,rk3576-otp
+       - rockchip,rk3588-otp
++      - rockchip,rv1106-otp
+ 
+   reg:
+     maxItems: 1
+@@ -33,11 +34,11 @@ properties:
+ 
+   resets:
+     minItems: 1
+-    maxItems: 4
++    maxItems: 6
+ 
+   reset-names:
+     minItems: 1
+-    maxItems: 4
++    maxItems: 6
+ 
+ required:
+   - compatible
+@@ -174,6 +175,35 @@ allOf:
+             - const: apb
+             - const: arb
+ 
++  - if:
++      properties:
++        compatible:
++          contains:
++            enum:
++              - rockchip,rv1106-otp
++    then:
++      properties:
++        clocks:
++          minItems: 4
++          maxItems: 4
++        clock-names:
++          items:
++            - const: otp
++            - const: apb_pclk
++            - const: phy
++            - const: sbpi
++        resets:
++          minItems: 6
++          maxItems: 6
++        reset-names:
++          items:
++            - const: otp
++            - const: apb
++            - const: phy
++            - const: sbpi
++            - const: arb
++            - const: pmc
++
+ unevaluatedProperties: false
+ 
+ examples:

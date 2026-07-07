@@ -1,0 +1,55 @@
+Upstream-Status: Inappropriate
+
+Signed-off-by: Raman Rakavets <radikot88@gmail.com>
+diff --git a/drivers/ram/rockchip/Makefile b/drivers/ram/rockchip/Makefile
+index fd94aad0cd4..3ca05e2e97a 100644
+--- a/drivers/ram/rockchip/Makefile
++++ b/drivers/ram/rockchip/Makefile
+@@ -17,5 +17,6 @@ obj-$(CONFIG_ROCKCHIP_RK3528) += sdram_rk3528.o
+ obj-$(CONFIG_ROCKCHIP_RK3568) += sdram_rk3568.o
+ obj-$(CONFIG_ROCKCHIP_RK3576) += sdram_rk3576.o
+ obj-$(CONFIG_ROCKCHIP_RK3588) += sdram_rk3588.o
++obj-$(CONFIG_ROCKCHIP_RV1106) += sdram_rv1106.o
+ obj-$(CONFIG_ROCKCHIP_RV1126) += sdram_rv1126.o sdram_pctl_px30.o
+ obj-$(CONFIG_ROCKCHIP_SDRAM_COMMON) += sdram_common.o
+diff --git a/drivers/ram/rockchip/sdram_rv1106.c b/drivers/ram/rockchip/sdram_rv1106.c
+new file mode 100644
+index 00000000000..b6cb4461497
+--- /dev/null
++++ b/drivers/ram/rockchip/sdram_rv1106.c
+@@ -0,0 +1,35 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * (C) Copyright 2021 Rockchip Electronics Co., Ltd.
++ */
++
++#include <dm.h>
++#include <ram.h>
++#include <asm/arch-rockchip/sdram.h>
++
++#define PMUGRF_BASE			0xff020000
++#define OS_REG2_REG			0x208
++
++static int rv1106_dmc_get_info(struct udevice *dev, struct ram_info *info)
++{
++	info->base = CFG_SYS_SDRAM_BASE;
++	info->size = rockchip_sdram_size(PMUGRF_BASE + OS_REG2_REG);
++
++	return 0;
++}
++
++static struct ram_ops rv1106_dmc_ops = {
++	.get_info = rv1106_dmc_get_info,
++};
++
++static const struct udevice_id rv1106_dmc_ids[] = {
++	{ .compatible = "rockchip,rv1106-dmc" },
++	{ }
++};
++
++U_BOOT_DRIVER(rockchip_rv1106_dmc) = {
++	.name = "rockchip_rv1106_dmc",
++	.id = UCLASS_RAM,
++	.of_match = rv1106_dmc_ids,
++	.ops = &rv1106_dmc_ops,
++};
