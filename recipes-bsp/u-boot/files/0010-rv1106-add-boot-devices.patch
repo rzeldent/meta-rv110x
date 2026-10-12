@@ -1,0 +1,31 @@
+Upstream-Status: Inappropriate
+
+Signed-off-by: Raman Rakavets <radikot88@gmail.com>
+diff --git a/arch/arm/mach-rockchip/rv1106/rv1106.c b/arch/arm/mach-rockchip/rv1106/rv1106.c
+index 1234567..abcdefg 100644
+--- a/arch/arm/mach-rockchip/rv1106/rv1106.c
++++ b/arch/arm/mach-rockchip/rv1106/rv1106.c
+@@ -2,13 +2,22 @@
+ /*
+  * Copyright (c) 2022 Rockchip Electronics Co., Ltd
+  */
+- 
++
++#include <asm/arch-rockchip/bootrom.h>
++
+ #include <init.h>
+ #include <debug_uart.h>
+ #include <asm/io.h>
+ #include <configs/rv1106_common.h>
+ #include <linux/delay.h>
+ 
++const char * const boot_devices[BROM_LAST_BOOTSOURCE + 1] = {
++	[BROM_BOOTSOURCE_EMMC] = "/mmc@ffa90000",
++	[BROM_BOOTSOURCE_SPINOR] = "/spi@ffac0000/flash@0",
++	[BROM_BOOTSOURCE_SPINAND] = "/spi@ffac0000/flash@0",
++	[BROM_BOOTSOURCE_SD] = "/mmc@ffaa0000",
++};
++
+ DECLARE_GLOBAL_DATA_PTR;
+ 
+ #define PERI_GRF_BASE			0xff000000
