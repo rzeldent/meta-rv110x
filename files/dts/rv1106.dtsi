@@ -277,7 +277,36 @@
 			};
 		};
 
-		u2phy: usb2phy@ff3e0000 {
+		saradc: saradc@ff3c0000 {
+		compatible = "rockchip,rv1106-saradc";
+		reg = <0xff3c0000 0x100>;
+		interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
+		#io-channel-cells = <1>;
+		clocks = <&cru CLK_SARADC>, <&cru PCLK_SARADC>;
+		clock-names = "saradc", "apb_pclk";
+		resets = <&cru SRST_P_SARADC>;
+		reset-names = "saradc-apb";
+		status = "disabled";
+	};
+
+	tsadc: tsadc@ff3c8000 {
+		compatible = "rockchip,rv1106-tsadc";
+		reg = <0xff3c8000 0x1000>;
+		rockchip,grf = <&ioc>;
+		interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+		clocks = <&cru CLK_TSADC>, <&cru PCLK_TSADC>, <&cru CLK_TSADC_TSEN>;
+		clock-names = "tsadc", "apb_pclk", "tsen";
+		assigned-clocks = <&cru CLK_TSADC>, <&cru CLK_TSADC_TSEN>;
+		assigned-clock-rates = <1000000>, <12000000>;
+		resets = <&cru SRST_TSADC>, <&cru SRST_P_TSADC>;
+		reset-names = "tsadc", "tsadc-apb";
+		#thermal-sensor-cells = <1>;
+		rockchip,hw-tshut-temp = <120000>;
+		rockchip,hw-tshut-mode = <0>;
+		rockchip,hw-tshut-polarity = <0>;
+	};
+
+	u2phy: usb2phy@ff3e0000 {
 			compatible = "rockchip,rv1106-usb2phy";
 			reg = <0xff3e0000 0x8000>;
 			clocks = <&cru CLK_REF_USBPHY>, <&cru PCLK_USBPHY>;
@@ -486,6 +515,17 @@
 		ioc: syscon@ff538000 {
 			compatible = "rockchip,rv1106-ioc", "syscon";
 			reg = <0xff538000 0x40000>;
+		};
+
+		hw_decompress: decompress@ff520000 {
+			compatible = "rockchip,hw-decompress";
+			reg = <0xff520000 0x1000>;
+			interrupts = <GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
+			clocks = <&cru ACLK_DECOM>, <&cru DCLK_DECOM>, <&cru PCLK_DECOM>;
+			clock-names = "aclk", "dclk", "pclk";
+			resets = <&cru SRST_D_DECOM>;
+			reset-names = "dresetn";
+			status = "disabled";
 		};
 
 		system_sram: sram@ff6c0000 {

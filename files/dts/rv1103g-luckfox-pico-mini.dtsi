@@ -1,9 +1,8 @@
 // SPDX-License-Identifier: (GPL-2.0+ OR MIT)
 /*
  * Copyright (c) 2023 Luckfox Electronics Co., Ltd.
+ * Common base for Luckfox Pico Mini variants
  */
-
-/dts-v1/;
 
 #include "rv1103g.dtsi"
 
@@ -85,18 +84,6 @@
 	cap-sd-highspeed;
 	disable-wp;
 	status = "okay";
-};
-
-&sfc {
-	status = "okay";
-
-	spi_nand: flash@0 {
-		compatible = "spi-nand";
-		reg = <0>;
-		spi-max-frequency = <75000000>;
-		spi-rx-bus-width = <4>;
-		spi-tx-bus-width = <1>;
-	};
 };
 
 &i2c3 {

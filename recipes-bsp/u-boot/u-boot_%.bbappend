@@ -11,14 +11,17 @@ SRC_URI += " \
     file://0007-board-rockchip-add-rv1106-evb.patch \
     file://0008-add-spl-mtd-load-support.patch \
     file://0010-rv1106-add-boot-devices.patch \
-    file://rv1103g-luckfox-pico-mini.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1103g-luckfox-pico-mini-a.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1103g-luckfox-pico-mini-b.dts;subdir=${P}/arch/arm/dts/ \
+    file://rv1103g-luckfox-pico-mini.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1103g.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1106-luckfox-pico.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1106-luckfox-pico-plus.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1106g-luckfox-pico-pro-max.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1106g-luckfox-pico-pro-max-u-boot.dtsi;subdir=${P}/arch/arm/dts/ \
+    file://rv1106g-luckfox-pico-u-boot.dtsi;subdir=${P}/arch/arm/dts/ \
+    file://rv1106-luckfox-pico-pro-max-ipc.dtsi;subdir=${P}/arch/arm/dts/ \
+    file://rv1103-luckfox-pico-ipc.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1106-luckfox-pico-pro-max-ipc.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1106-evb.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1106-amp.dtsi;subdir=${P}/arch/arm/dts/ \
@@ -27,6 +30,8 @@ SRC_URI += " \
     file://rv1103g-u-boot.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1106-u-boot.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1103g-luckfox-pico-mini-u-boot.dtsi;subdir=${P}/arch/arm/dts/ \
+    file://rv1103g-luckfox-pico-mini-a-u-boot.dtsi;subdir=${P}/arch/arm/dts/ \
+    file://rv1103g-luckfox-pico-mini-b-u-boot.dtsi;subdir=${P}/arch/arm/dts/ \
     file://luckfox-pico-mini-a-rv1103g_defconfig;subdir=${P}/configs/ \
     file://luckfox-pico-mini-b-rv1103g_defconfig;subdir=${P}/configs/ \
     file://luckfox-pico-rv1106_defconfig;subdir=${P}/configs/ \
