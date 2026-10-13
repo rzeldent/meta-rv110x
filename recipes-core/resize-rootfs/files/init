@@ -1,0 +1,21 @@
+#!/bin/sh
+#
+# Init script for resize-rootfs. Runs late in the boot sequence so that the
+# root filesystem is already mounted read-write.
+
+DAEMON=/usr/sbin/resize-rootfs
+
+case "$1" in
+    start)
+        [ -x "$DAEMON" ] || exit 0
+        "$DAEMON"
+        ;;
+    stop)
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0
