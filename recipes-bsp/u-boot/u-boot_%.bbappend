@@ -42,3 +42,47 @@ SRC_URI += " \
 SRC_URI:append:rv-ubifs = " \
     file://0009-add-rv1106-legacy-distro-boot-env.patch \
 " 
+
+# ---------------------------------------------------------------------------
+# Saveable U-Boot environment (MACHINE_FEATURES += "rk-u-boot-env")
+#
+# meta-rockchip provides the config fragment, the userspace tools (via
+# u-boot-fw-utils/u-boot-env) and the wks rawcopy hook, but its
+# rk_generate_env() postfunc assumes a non-UBOOT_CONFIG build and looks for
+# ${B}/.config. Every machine in this layer uses UBOOT_CONFIG, so the config
+# lives in ${B}/<defconfig>-<type>/. Replace the postfunc with one that copes
+# with both layouts.
+# ---------------------------------------------------------------------------
+
+rv110x_generate_env() {
+    # With UBOOT_CONFIG the real .config is in the per-flavour build dir.
+    local cfg
+    cfg="$(ls ${B}/*/.config ${B}/.config 2>/dev/null | head -n 1)"
+    if [ -z "${cfg}" ]; then
+        echo "u-boot env: no .config found under ${B}, cannot determine CONFIG_ENV_SIZE"
+        return 1
+    fi
+
+    local env_size
+    env_size="$(sed -n 's/^CONFIG_ENV_SIZE=//p' "${cfg}" | head -n 1)"
+    if [ -z "${env_size}" ]; then
+        echo "u-boot env: CONFIG_ENV_SIZE not found in ${cfg}"
+        return 1
+    fi
+
+    # Configuration for the Linux userspace tools (fw_printenv/fw_setenv).
+    echo "/dev/disk/by-partlabel/uboot_env 0x0000 ${env_size}" > ${UNPACKDIR}/fw_env.config
+
+    # Optionally seed the environment partition with the built-in environment.
+    if [ "${@bb.utils.to_boolean(d.getVar('RK_IMAGE_INCLUDES_UBOOT_ENV'), False)}" = "True" ]; then
+        local initial_env
+        initial_env="$(ls ${B}/*/u-boot-initial-env ${B}/u-boot-initial-env 2>/dev/null | head -n 1)"
+        if [ -z "${initial_env}" ]; then
+            echo "u-boot env: u-boot-initial-env not found under ${B}"
+            return 1
+        fi
+        mkenvimage -s "${env_size}" "${initial_env}" -o "${B}/u-boot.env"
+    fi
+}
+
+do_compile[postfuncs] = "${@'rv110x_generate_env' if 'rk-u-boot-env' in d.getVar('MACHINEOVERRIDES').split(':') else ''}"
