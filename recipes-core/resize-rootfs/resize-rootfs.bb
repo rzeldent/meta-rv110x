@@ -21,7 +21,7 @@ INITSCRIPT_NAME = "resize-rootfs"
 # Run after the root filesystem is mounted read-write and /var/lib exists.
 INITSCRIPT_PARAMS = "start 40 S ."
 
-RDEPENDS:${PN} += "e2fsprogs-resize2fs util-linux-sfdisk util-linux-partx util-linux-resizepart util-linux-findmnt"
+RDEPENDS:${PN} += "e2fsprogs-resize2fs util-linux-sfdisk util-linux-partx util-linux-findmnt"
 
 do_install() {
     install -d ${D}${sbindir}

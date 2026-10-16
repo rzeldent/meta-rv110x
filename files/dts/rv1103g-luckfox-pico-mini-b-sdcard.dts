@@ -1,0 +1,28 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * Copyright (c) 2023 Luckfox Electronics Co., Ltd.
+ */
+
+/dts-v1/;
+
+#include "rv1103g-luckfox-pico-mini.dtsi"
+
+/ {
+	model = "Luckfox Pico Mini B SDCARD";
+	compatible = "rockchip,rv1103g-luckfox-pico-mini-b-sdcard", "rockchip,rv1103g-luckfox-pico-mini", "rockchip,rv1103";	
+};
+
+/* The SPI NAND is not the boot medium here, but it is still populated on the
+ * board, so expose it to Linux as a raw MTD device.
+ */
+&sfc {
+	status = "okay";
+
+	spi_nand: flash@0 {
+		compatible = "spi-nand";
+		reg = <0>;
+		spi-max-frequency = <75000000>;
+		spi-rx-bus-width = <4>;
+		spi-tx-bus-width = <1>;
+	};
+};

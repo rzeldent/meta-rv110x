@@ -31,13 +31,11 @@ echo "resize-rootfs: growing $ROOTDEV (partition $PART on $DISK)"
 # partition table that is in use.
 printf ',+,\n' | sfdisk --no-reread --no-tell-kernel -N "$PART" "$DISK"
 
-# Tell the kernel about the new size. resizepart uses the BLKPG ioctl, which
-# works on a partition that is currently mounted; partx is a fallback.
-if command -v resizepart >/dev/null 2>&1; then
-    resizepart "$DISK" "$PART" || true
-else
-    partx -u "$DISK" 2>/dev/null || true
-fi
+# Tell the kernel about the new size. partx --update re-reads the on-disk
+# table and applies the change to the kernel; for the mounted root partition
+# the delete fails with EBUSY and partx falls back to the BLKPG resize ioctl,
+# which works on a partition that is currently mounted.
+partx -u -n "$PART" "$DISK" 2>/dev/null || true
 
 # The kernel may still report the old size for the mounted root device, so grow
 # the filesystem online.
