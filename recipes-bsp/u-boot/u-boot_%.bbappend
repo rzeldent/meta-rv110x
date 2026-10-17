@@ -10,6 +10,7 @@ SRC_URI += " \
     file://0006-arch-arm-rockchip-add-initial-support-for-rv1106.patch \
     file://0007-board-rockchip-add-rv1106-evb.patch \
     file://0008-add-spl-mtd-load-support.patch \
+    file://0009-add-rv1106-legacy-distro-boot-env.patch \
     file://0010-rv1106-add-boot-devices.patch \
     file://rv1103g-luckfox-pico-mini-a.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1103g-luckfox-pico-mini-b.dts;subdir=${P}/arch/arm/dts/ \
@@ -39,9 +40,6 @@ SRC_URI += " \
     file://luckfox-pico-max-rv1106_defconfig;subdir=${P}/configs/ \
 "
 
-SRC_URI:append:rv-ubifs = " \
-    file://0009-add-rv1106-legacy-distro-boot-env.patch \
-" 
 
 # ---------------------------------------------------------------------------
 # Saveable U-Boot environment (MACHINE_FEATURES += "rk-u-boot-env")
