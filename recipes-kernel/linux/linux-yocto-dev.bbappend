@@ -6,6 +6,7 @@ require recipes-kernel/linux/linux-rockchip.inc
 KBRANCH:luckfox-pico-mini = "v7.1/standard/base"
 KBRANCH:luckfox-pico-mini-a = "v7.1/standard/base"
 KBRANCH:luckfox-pico-mini-b = "v7.1/standard/base"
+KBRANCH:luckfox-pico-mini-b-camera = "v7.1/standard/base"
 KBRANCH:luckfox-pico-mini-b-sdcard = "v7.1/standard/base"
 KBRANCH:luckfox-pico-mini-b-spi-nand = "v7.1/standard/base"
 KBRANCH:luckfox-pico = "v7.1/standard/base"
@@ -20,8 +21,10 @@ SRCREV_meta:luckfox-pico-mini = "0a0706de0ba02be2cac13def96a65b40a52666bc"
 SRCREV_machine:luckfox-pico-mini-a = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
 SRCREV_meta:luckfox-pico-mini-a = "0a0706de0ba02be2cac13def96a65b40a52666bc"
 SRCREV_machine:luckfox-pico-mini-b = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
+SRCREV_machine:luckfox-pico-mini-b-camera = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
 SRCREV_machine:luckfox-pico-mini-b-sdcard = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
 SRCREV_meta:luckfox-pico-mini-b = "0a0706de0ba02be2cac13def96a65b40a52666bc"
+SRCREV_meta:luckfox-pico-mini-b-camera = "0a0706de0ba02be2cac13def96a65b40a52666bc"
 SRCREV_meta:luckfox-pico-mini-b-sdcard = "0a0706de0ba02be2cac13def96a65b40a52666bc"
 SRCREV_machine:luckfox-pico-mini-b-spi-nand = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
 SRCREV_meta:luckfox-pico-mini-b-spi-nand = "0a0706de0ba02be2cac13def96a65b40a52666bc"
@@ -41,6 +44,7 @@ SRCREV_meta:luckfox-pico-max-spi-nand = "0a0706de0ba02be2cac13def96a65b40a52666b
 LINUX_VERSION:luckfox-pico-mini = "7.1"
 LINUX_VERSION:luckfox-pico-mini-a = "7.1"
 LINUX_VERSION:luckfox-pico-mini-b = "7.1"
+LINUX_VERSION:luckfox-pico-mini-b-camera = "7.1"
 LINUX_VERSION:luckfox-pico-mini-b-sdcard = "7.1"
 LINUX_VERSION:luckfox-pico-mini-b-spi-nand = "7.1"
 LINUX_VERSION:luckfox-pico = "7.1"
@@ -54,6 +58,7 @@ LINUX_VERSION:luckfox-pico-max-spi-nand = "7.1"
 COMPATIBLE_MACHINE:luckfox-pico-mini = "luckfox-pico-mini"
 COMPATIBLE_MACHINE:luckfox-pico-mini-a = "luckfox-pico-mini-a"
 COMPATIBLE_MACHINE:luckfox-pico-mini-b = "luckfox-pico-mini-b"
+COMPATIBLE_MACHINE:luckfox-pico-mini-b-camera = "luckfox-pico-mini-b-camera"
 COMPATIBLE_MACHINE:luckfox-pico-mini-b-sdcard = "luckfox-pico-mini-b-sdcard"
 COMPATIBLE_MACHINE:luckfox-pico-mini-b-spi-nand = "luckfox-pico-mini-b-spi-nand"
 COMPATIBLE_MACHINE:luckfox-pico = "luckfox-pico"
@@ -78,6 +83,9 @@ SRC_URI += " \
     file://0012-dt-bindings-phy-rockchip-inno-usb2phy-add-rv1103.patch \
     file://0013-phy-rockchip-inno-usb2-add-usb2-phy-support-for-rv1103.patch \
     file://0014-phy-rockchip-inno-usb2-fix-locate-usbgrf.patch \
+    file://0015-media-i2c-add-smartsens-sc3336-sensor.patch \
+    file://0016-phy-rockchip-add-csi2-dphy-driver.patch \
+    file://0018-media-rockchip-add-vendor-cif-stack.patch \
     file://apply-rv-optimizations.cfg \
     file://enable-rv-specific-drivers.cfg \
     file://remove-crypto-drivers.cfg \
@@ -93,8 +101,19 @@ SRC_URI += " \
     file://remove-snd-drivers.cfg \
     file://remove-usb-drivers.cfg \
     file://remove-wlan-drivers.cfg \
+    file://phy-rockchip-csi2-dphy-common.h \
+    file://rkcif-vendor/ \
+    file://phy-rockchip-csi2-dphy-hw.c \
+    file://phy-rockchip-csi2-dphy.c \
+    file://phy-rockchip-samsung-dcphy.h \
+    file://rkcif-config.h \
+    file://rk-camera-module.h \
+    file://rk-preisp.h \
+    file://rk-video-format.h \
+    file://sc3336.c \
     file://rv1103g-luckfox-pico-mini-a.dts \
     file://rv1103g-luckfox-pico-mini-b.dts \
+    file://rv1103g-luckfox-pico-mini-b-camera.dts \
     file://rv1103g-luckfox-pico-mini-b-sdcard.dts \
     file://rv1103g-luckfox-pico-mini.dtsi \
     file://rv1103g.dtsi \
@@ -109,9 +128,30 @@ SRC_URI += " \
     file://rv1106.dtsi \
 "
 
-do_configure:append() {
+# Sources must exist before do_kernel_configme evaluates the Kconfig tree.
+do_patch:append() {
+    cp ${UNPACKDIR}/rk-camera-module.h ${S}/include/uapi/linux/
+    cp ${UNPACKDIR}/rk-video-format.h ${S}/include/uapi/linux/
+    cp ${UNPACKDIR}/rk-preisp.h ${S}/include/uapi/linux/
+    cp ${UNPACKDIR}/sc3336.c ${S}/drivers/media/i2c/
+    cp -r ${UNPACKDIR}/rkcif-vendor ${S}/drivers/media/platform/rockchip/
+    install -d ${S}/include/soc/rockchip ${S}/include/linux/soc/rockchip
+    install -d ${S}/include/dt-bindings/soc
+    cp ${UNPACKDIR}/rkcif-vendor/include/rockchip-system-status-dt.h ${S}/include/dt-bindings/soc/rockchip-system-status.h
+    cp ${UNPACKDIR}/rkcif-vendor/include/rk-isp*-config.h ${S}/include/uapi/linux/
+    cp ${UNPACKDIR}/rkcif-vendor/include/rk_sdmmc.h ${S}/include/linux/soc/rockchip/
+    cp ${UNPACKDIR}/rkcif-vendor/include/rockchip_rockit.h ${S}/include/soc/rockchip/
+    cp ${UNPACKDIR}/rkcif-vendor/include/rockchip_iommu.h ${S}/include/soc/rockchip/
+    cp ${UNPACKDIR}/rkcif-vendor/include/rockchip-system-status.h ${S}/include/soc/rockchip/
+    cp ${UNPACKDIR}/rkcif-vendor/include/rockchip_thunderboot_service.h ${S}/include/linux/soc/rockchip/
+    cp ${UNPACKDIR}/rkcif-config.h ${S}/include/uapi/linux/
+    cp ${UNPACKDIR}/phy-rockchip-csi2-dphy.c ${S}/drivers/phy/rockchip/
+    cp ${UNPACKDIR}/phy-rockchip-csi2-dphy-hw.c ${S}/drivers/phy/rockchip/
+    cp ${UNPACKDIR}/phy-rockchip-csi2-dphy-common.h ${S}/drivers/phy/rockchip/
+    cp ${UNPACKDIR}/phy-rockchip-samsung-dcphy.h ${S}/drivers/phy/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-a.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-b.dts ${S}/arch/arm/boot/dts/rockchip/
+    cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-b-camera.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-b-sdcard.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g.dtsi ${S}/arch/arm/boot/dts/rockchip/
@@ -122,4 +162,10 @@ do_configure:append() {
     cp ${UNPACKDIR}/rv1103-luckfox-pico-ipc.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106-pinctrl.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106.dtsi ${S}/arch/arm/boot/dts/rockchip/
+}
+
+# The camera DTB is not in the kernel's own Makefile, so add it explicitly.
+do_configure:append() {
+    echo 'dtb-$(CONFIG_ARCH_ROCKCHIP) += rv1103g-luckfox-pico-mini-b-camera.dtb' \
+        >> ${S}/arch/arm/boot/dts/rockchip/Makefile
 }

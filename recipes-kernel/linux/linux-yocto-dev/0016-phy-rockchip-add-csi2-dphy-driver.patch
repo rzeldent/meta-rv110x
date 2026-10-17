@@ -1,0 +1,37 @@
+Upstream-Status: Inappropriate
+
+Signed-off-by: Raman Rakavets <radikot88@gmail.com>
+diff --git a/drivers/phy/rockchip/Kconfig b/drivers/phy/rockchip/Kconfig
+index 1469857..aed47d2 100644
+--- a/drivers/phy/rockchip/Kconfig
++++ b/drivers/phy/rockchip/Kconfig
+@@ -48,6 +48,17 @@ config PHY_ROCKCHIP_INNO_USB2
+ 	help
+ 	  Support for Rockchip USB2.0 PHY with Innosilicon IP block.
+ 
++config PHY_ROCKCHIP_CSI2_DPHY
++	tristate "Rockchip CSI2 DPHY driver"
++	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
++	select GENERIC_PHY
++	select GENERIC_PHY_MIPI_DPHY
++	select VIDEO_V4L2_SUBDEV_API
++	help
++	  Enable this to support the Rockchip MIPI CSI2 DPHY, which is
++	  modelled as a V4L2 sub-device bridging the sensor and the MIPI
++	  CSI2 receiver.
++
+ config PHY_ROCKCHIP_INNO_CSIDPHY
+ 	tristate "Rockchip Innosilicon MIPI CSI PHY driver"
+ 	depends on (ARCH_ROCKCHIP || COMPILE_TEST) && OF
+diff --git a/drivers/phy/rockchip/Makefile b/drivers/phy/rockchip/Makefile
+index 117aaff..acc5b25 100644
+--- a/drivers/phy/rockchip/Makefile
++++ b/drivers/phy/rockchip/Makefile
+@@ -2,6 +2,7 @@
+ obj-$(CONFIG_PHY_ROCKCHIP_DP)		+= phy-rockchip-dp.o
+ obj-$(CONFIG_PHY_ROCKCHIP_DPHY_RX0)     += phy-rockchip-dphy-rx0.o
+ obj-$(CONFIG_PHY_ROCKCHIP_EMMC)		+= phy-rockchip-emmc.o
++obj-$(CONFIG_PHY_ROCKCHIP_CSI2_DPHY)	+= phy-rockchip-csi2-dphy.o phy-rockchip-csi2-dphy-hw.o
+ obj-$(CONFIG_PHY_ROCKCHIP_INNO_CSIDPHY)	+= phy-rockchip-inno-csidphy.o
+ obj-$(CONFIG_PHY_ROCKCHIP_INNO_DSIDPHY)	+= phy-rockchip-inno-dsidphy.o
+ obj-$(CONFIG_PHY_ROCKCHIP_INNO_HDMI)	+= phy-rockchip-inno-hdmi.o
