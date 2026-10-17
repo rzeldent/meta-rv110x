@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# Init script for usb-gadget-serial. It runs from rcS, i.e. before init opens
+# the runlevel getty entries, so /dev/ttyGS0 exists by the time ttyrun looks for
+# it. That ordering matters: ttyrun pauses indefinitely rather than retrying
+# when the terminal it was given is missing.
+
+DAEMON=/usr/sbin/usb-gadget-serial
+GADGET=/sys/kernel/config/usb_gadget/luckfox
+
+case "$1" in
+    start)
+        [ -x "$DAEMON" ] || exit 0
+        "$DAEMON"
+        ;;
+    stop)
+        # Unbinding the controller takes the function's tty with it.
+        if [ -w "$GADGET/UDC" ]; then
+            echo "" > "$GADGET/UDC" 2>/dev/null || true
+        fi
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac
+
+exit 0

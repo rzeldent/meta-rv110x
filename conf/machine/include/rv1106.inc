@@ -11,13 +11,13 @@ require conf/machine/include/rockchip-wic.inc
 
 PREFERRED_PROVIDER_virtual/kernel = "linux-yocto-dev"
 
-SERIAL_CONSOLES = "115200;ttyS2"
+SERIAL_CONSOLES = "115200;ttyS2 115200;ttyGS0"
 
 KBUILD_DEFCONFIG = "multi_v7_defconfig"
 
 UBOOT_SUFFIX ?= "img"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-image"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-image usb-gadget-serial"
 MACHINE_EXTRA_RRECOMMENDS += "kernel-modules"
 
 ENABLE_STATELESS_VPU_GST ?= "1"
