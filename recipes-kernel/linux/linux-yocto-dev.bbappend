@@ -6,7 +6,6 @@ require recipes-kernel/linux/linux-rockchip.inc
 KBRANCH:luckfox-pico-mini = "v7.1/standard/base"
 KBRANCH:luckfox-pico-mini-a = "v7.1/standard/base"
 KBRANCH:luckfox-pico-mini-b = "v7.1/standard/base"
-KBRANCH:luckfox-pico-mini-b-camera = "v7.1/standard/base"
 KBRANCH:luckfox-pico-mini-b-sdcard = "v7.1/standard/base"
 KBRANCH:luckfox-pico-mini-b-spi-nand = "v7.1/standard/base"
 KBRANCH:luckfox-pico = "v7.1/standard/base"
@@ -21,10 +20,8 @@ SRCREV_meta:luckfox-pico-mini = "0a0706de0ba02be2cac13def96a65b40a52666bc"
 SRCREV_machine:luckfox-pico-mini-a = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
 SRCREV_meta:luckfox-pico-mini-a = "0a0706de0ba02be2cac13def96a65b40a52666bc"
 SRCREV_machine:luckfox-pico-mini-b = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_machine:luckfox-pico-mini-b-camera = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
 SRCREV_machine:luckfox-pico-mini-b-sdcard = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
 SRCREV_meta:luckfox-pico-mini-b = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_meta:luckfox-pico-mini-b-camera = "0a0706de0ba02be2cac13def96a65b40a52666bc"
 SRCREV_meta:luckfox-pico-mini-b-sdcard = "0a0706de0ba02be2cac13def96a65b40a52666bc"
 SRCREV_machine:luckfox-pico-mini-b-spi-nand = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
 SRCREV_meta:luckfox-pico-mini-b-spi-nand = "0a0706de0ba02be2cac13def96a65b40a52666bc"
@@ -44,7 +41,6 @@ SRCREV_meta:luckfox-pico-max-spi-nand = "0a0706de0ba02be2cac13def96a65b40a52666b
 LINUX_VERSION:luckfox-pico-mini = "7.1"
 LINUX_VERSION:luckfox-pico-mini-a = "7.1"
 LINUX_VERSION:luckfox-pico-mini-b = "7.1"
-LINUX_VERSION:luckfox-pico-mini-b-camera = "7.1"
 LINUX_VERSION:luckfox-pico-mini-b-sdcard = "7.1"
 LINUX_VERSION:luckfox-pico-mini-b-spi-nand = "7.1"
 LINUX_VERSION:luckfox-pico = "7.1"
@@ -58,7 +54,6 @@ LINUX_VERSION:luckfox-pico-max-spi-nand = "7.1"
 COMPATIBLE_MACHINE:luckfox-pico-mini = "luckfox-pico-mini"
 COMPATIBLE_MACHINE:luckfox-pico-mini-a = "luckfox-pico-mini-a"
 COMPATIBLE_MACHINE:luckfox-pico-mini-b = "luckfox-pico-mini-b"
-COMPATIBLE_MACHINE:luckfox-pico-mini-b-camera = "luckfox-pico-mini-b-camera"
 COMPATIBLE_MACHINE:luckfox-pico-mini-b-sdcard = "luckfox-pico-mini-b-sdcard"
 COMPATIBLE_MACHINE:luckfox-pico-mini-b-spi-nand = "luckfox-pico-mini-b-spi-nand"
 COMPATIBLE_MACHINE:luckfox-pico = "luckfox-pico"
@@ -113,9 +108,9 @@ SRC_URI += " \
     file://sc3336.c \
     file://rv1103g-luckfox-pico-mini-a.dts \
     file://rv1103g-luckfox-pico-mini-b.dts \
-    file://rv1103g-luckfox-pico-mini-b-camera.dts \
     file://rv1103g-luckfox-pico-mini-b-sdcard.dts \
     file://rv1103g-luckfox-pico-mini.dtsi \
+    file://rv1106-camera.dtsi \
     file://rv1103g.dtsi \
     file://rv1106-luckfox-pico.dts \
     file://rv1106-luckfox-pico-plus.dts \
@@ -151,9 +146,9 @@ do_patch:append() {
     cp ${UNPACKDIR}/phy-rockchip-samsung-dcphy.h ${S}/drivers/phy/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-a.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-b.dts ${S}/arch/arm/boot/dts/rockchip/
-    cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-b-camera.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-b-sdcard.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini.dtsi ${S}/arch/arm/boot/dts/rockchip/
+    cp ${UNPACKDIR}/rv1106-camera.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106-luckfox-pico.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106-luckfox-pico-plus.dts ${S}/arch/arm/boot/dts/rockchip/
@@ -162,10 +157,4 @@ do_patch:append() {
     cp ${UNPACKDIR}/rv1103-luckfox-pico-ipc.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106-pinctrl.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106.dtsi ${S}/arch/arm/boot/dts/rockchip/
-}
-
-# The camera DTB is not in the kernel's own Makefile, so add it explicitly.
-do_configure:append() {
-    echo 'dtb-$(CONFIG_ARCH_ROCKCHIP) += rv1103g-luckfox-pico-mini-b-camera.dtb' \
-        >> ${S}/arch/arm/boot/dts/rockchip/Makefile
 }

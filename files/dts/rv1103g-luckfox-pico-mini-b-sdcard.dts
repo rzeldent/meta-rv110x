@@ -26,3 +26,5 @@
 		spi-tx-bus-width = <1>;
 	};
 };
+
+#include "rv1106-camera.dtsi"

@@ -15,6 +15,7 @@ SRC_URI += " \
     file://rv1103g-luckfox-pico-mini-a.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1103g-luckfox-pico-mini-b.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1103g-luckfox-pico-mini.dtsi;subdir=${P}/arch/arm/dts/ \
+    file://rv1106-camera.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1103g.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1106-luckfox-pico.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1106-luckfox-pico-plus.dts;subdir=${P}/arch/arm/dts/ \

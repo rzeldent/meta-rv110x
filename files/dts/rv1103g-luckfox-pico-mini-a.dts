@@ -11,3 +11,5 @@
 	model = "Luckfox Pico Mini A";
 	compatible = "rockchip,rv1103g-luckfox-pico-mini-a", "rockchip,rv1103g-luckfox-pico-mini", "rockchip,rv1103";	
 };
+
+#include "rv1106-camera.dtsi"

@@ -136,3 +136,5 @@
 	extcon = <&u2phy>;
 	status = "okay";
 };
+
+#include "rv1106-camera.dtsi"

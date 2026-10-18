@@ -1,0 +1,175 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+/*
+ * MIPI CSI camera support shared by the Luckfox RV1103/RV1106 boards.
+ *
+ * Every board is described with the SC3336 sensor on i2c4, so a camera module
+ * attached to the MIPI connector works without a dedicated device tree. Boards
+ * without a module simply fail to probe the sensor, which is harmless.
+ */
+
+/ {
+	reserved-memory {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		/*
+		 * The CIF needs physically contiguous frame buffers and there is
+		 * no reserved region for it, so provide a reusable CMA pool. One
+		 * 2304x1296 RAW10 frame is ~3.8 MiB.
+		 */
+		cma: cma {
+			compatible = "shared-dma-pool";
+			reusable;
+			size = <0x2000000>;
+			linux,cma-default;
+		};
+	};
+
+	aliases {
+		i2c4 = &i2c4;
+	};
+};
+
+/***************************** CSI ********************************/
+&pinctrl {
+	camera {
+		mipi_refclk_sleep: mipi-refclk-sleep {
+			rockchip,pins = <3 RK_PC4 RK_FUNC_GPIO &pcfg_output_low>;
+		};
+
+		/*
+		 * Same pins as i2c4m2, but with the SoC pull-ups enabled and a
+		 * slower bus. The camera connector provides no (or too weak)
+		 * external pull-ups, so with the vendor "pull_none" group the
+		 * bus floats and every transfer NAKs.
+		 */
+		i2c4_cam_xfer: i2c4-cam-xfer {
+			rockchip,pins = <3 RK_PC7 3 &pcfg_pull_up>,
+					<3 RK_PD0 3 &pcfg_pull_up>;
+		};
+	};
+};
+
+&csi2_dphy_hw {
+	status = "okay";
+};
+
+/* mipi0_csi2 needs both CSI host instances available (num_hw == 2). */
+&mipi0_csi2_hw {
+	status = "okay";
+};
+
+&mipi1_csi2_hw {
+	status = "okay";
+};
+
+&csi2_dphy0 {
+	status = "okay";
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			csi_dphy_input0: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&sc3336_out>;
+				data-lanes = <1 2>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			csi_dphy_output: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&mipi_csi2_input>;
+			};
+		};
+	};
+};
+
+&i2c4 {
+	status = "okay";
+	clock-frequency = <100000>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c4_cam_xfer>;
+
+	sc3336: sc3336@30 {
+		compatible = "smartsens,sc3336";
+		status = "okay";
+		reg = <0x30>;
+		clocks = <&cru MCLK_REF_MIPI0>;
+		clock-names = "xvclk";
+		pwdn-gpios = <&gpio3 RK_PC5 GPIO_ACTIVE_HIGH>;
+		pinctrl-names = "default", "sleep";
+		pinctrl-0 = <&mipi_refclk_out0>;
+		pinctrl-1 = <&mipi_refclk_sleep>;
+		rockchip,camera-module-index = <0>;
+		rockchip,camera-module-facing = "back";
+		rockchip,camera-module-name = "CMK-OT2119-PC1";
+		rockchip,camera-module-lens-name = "30IRC-F16";
+		port {
+			sc3336_out: endpoint {
+				remote-endpoint = <&csi_dphy_input0>;
+				data-lanes = <1 2>;
+			};
+		};
+	};
+};
+
+&mipi0_csi2 {
+	status = "okay";
+
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		port@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi_csi2_input: endpoint@1 {
+				reg = <1>;
+				remote-endpoint = <&csi_dphy_output>;
+				data-lanes = <1 2>;
+			};
+		};
+
+		port@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			mipi_csi2_output: endpoint@0 {
+				reg = <0>;
+				remote-endpoint = <&cif_mipi_in>;
+			};
+		};
+	};
+};
+
+&rkcif {
+	status = "okay";
+};
+
+&rkcif_mipi_lvds {
+	status = "okay";
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&mipi_pins>;
+	port {
+		/* MIPI CSI-2 endpoint */
+		cif_mipi_in: endpoint {
+			remote-endpoint = <&mipi_csi2_output>;
+		};
+	};
+};
