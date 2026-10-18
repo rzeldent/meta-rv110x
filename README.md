@@ -11,13 +11,21 @@ Rockchip boards based on RV1103/RV1106 using ported rockchip-linux sources.
 | Name                | Link                                          | GPIO     |
 :--------------------:|:---------------------------------------------:|:-----------:
 | Luckfox Pico        | <https://www.luckfox.com/Luckfox-Pico>        | <img src="files/img/luckfox-pico-gpio.jpg" width="40%">|
-| Luckfox Pico SPI NAND | <https://www.luckfox.com/Luckfox-Pico>      | <img src="files/img/luckfox-pico-gpio.jpg" width="40%">|
 | Luckfox Pico Plus   | <https://www.luckfox.com/Luckfox-Pico-Plus>   | <img src="files/img/luckfox-pico-plus-gpio.jpg" width="40%">|
-| Luckfox Pico Plus SPI NAND | <https://www.luckfox.com/Luckfox-Pico-Plus> | <img src="files/img/luckfox-pico-plus-gpio.jpg" width="40%">|
 | Luckfox Pico Max    | <https://www.luckfox.com/Luckfox-Pico-Max>    | <img src="files/img/luckfox-pico-pro-gpio.jpg" width="40%">|
-| Luckfox Pico Max SPI NAND | <https://www.luckfox.com/Luckfox-Pico-Max> | <img src="files/img/luckfox-pico-pro-gpio.jpg" width="40%">|
 | Luckfox Pico Mini A | <https://www.luckfox.com/Luckfox-Pico-Mini-A> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%">|
 | Luckfox Pico Mini B | <https://www.luckfox.com/Luckfox-Pico-Mini-B> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%">|
+
+## 📦 Product Selection
+
+| PRODUCT | Main chip | Memory | NPU | ISP | Default Storage | FEATURES |
+| --- | --- | --- | --- | --- | --- | --- |
+| [![Luckfox Pico Mini A](files/img/luckfox-pico-mini-a.png)](https://www.luckfox.com/Luckfox-Pico-Mini-A) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | TF card (Not included) | Onboard Type-C port, MIPI CSI Interface, GPIO, etc. |
+| [![Luckfox Pico Mini B](files/img/luckfox-pico-mini-b.png)](https://www.luckfox.com/Luckfox-Pico-Mini-B) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | SPI NAND FLASH (128MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, etc. |
+| [![Luckfox Pico](files/img/luckfox-pico.png)](https://www.luckfox.com/Luckfox-Pico) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | TF card (Not included) | Onboard Type-C port, MIPI CSI Interface, GPIO, etc. |
+| [![Luckfox Pico Plus](files/img/luckfox-pico-plus.png)](https://www.luckfox.com/EN-Luckfox-Pico-Plus.htm) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | SPI NAND FLASH (128MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, etc. |
+| [![Luckfox Pico Pro](files/img/luckfox-pico-pro.png)](https://www.luckfox.com/EN-Luckfox-Pico-Pro) | RV1106G | 128MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | SPI NAND FLASH (256MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, RTC battery header, etc. |
+| [![Luckfox Pico Max](files/img/luckfox-pico-pro.png)](https://www.luckfox.com/Luckfox-Pico-Max) | RV1106G | 256MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | SPI NAND FLASH (256MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, RTC battery header, etc. |
 
 The boards can be built to boot either from an SD card or from the on-board SPI
 NAND, and there is one machine for each combination:
