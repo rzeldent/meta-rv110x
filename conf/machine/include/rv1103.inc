@@ -34,10 +34,13 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-cif-vendor"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-rga"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-vdec"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-isp1"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-rknpu"
 # Vision userspace libraries: MPP (VPU encode/decode), RGA (2D graphics),
 # RKAIQ (ISP 3A), rockit (image processing), RKNNMRT (NPU inference) and
 # rkadk (media framework).
-MACHINE_EXTRA_RRECOMMENDS += "libmpp librga librkaiq librockit librknnmrt rkadk"
+# These are not packaged as Yocto recipes in this layer yet (see README),
+# so they cannot be listed as recommendations without breaking the build.
+#MACHINE_EXTRA_RRECOMMENDS += "libmpp librga librkaiq librockit librknnmrt rkadk"
 # Capture and bus inspection tools. packagegroup-core-boot only honours
 # MACHINE_ESSENTIAL_EXTRA_RDEPENDS, so list them there.
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "v4l-utils i2c-tools"
