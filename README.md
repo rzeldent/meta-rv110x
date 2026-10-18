@@ -19,6 +19,29 @@ Rockchip boards based on RV1103/RV1106 using ported rockchip-linux sources.
 | Luckfox Pico Mini A | <https://www.luckfox.com/Luckfox-Pico-Mini-A> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%">|
 | Luckfox Pico Mini B | <https://www.luckfox.com/Luckfox-Pico-Mini-B> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%">|
 
+The boards can be built to boot either from an SD card or from the on-board SPI
+NAND, and there is one machine for each combination:
+
+| Machine | Board | Boot medium |
+| --- | --- | --- |
+| `luckfox-pico` | Luckfox Pico | SD card |
+| `luckfox-pico-spi-nand` | Luckfox Pico | SPI NAND |
+| `luckfox-pico-plus` | Luckfox Pico Plus | SD card |
+| `luckfox-pico-plus-spi-nand` | Luckfox Pico Plus | SPI NAND |
+| `luckfox-pico-max` | Luckfox Pico Max | SD card |
+| `luckfox-pico-max-spi-nand` | Luckfox Pico Max | SPI NAND |
+| `luckfox-pico-mini-a` | Luckfox Pico Mini A | SD card |
+| `luckfox-pico-mini-b` | Luckfox Pico Mini B | SD card |
+| `luckfox-pico-mini-b-sdcard` | Luckfox Pico Mini B, SPI NAND exposed as MTD | SD card |
+| `luckfox-pico-mini-b-spi-nand` | Luckfox Pico Mini B | SPI NAND |
+
+The Mini B has two SD card variants: `luckfox-pico-mini-b-sdcard` additionally
+enables the on-board SPI NAND so it shows up as a raw MTD device, which is
+useful for updating the NAND from a card that was booted from SD.
+
+Features are not split into extra machines: camera support, the root filesystem
+resize and the USB serial console are part of every machine that can use them.
+
 ## 🔧 Development status
 - [x] 🚀 Initial support in u-boot
 - [x] ✈️ Initial support in linux kernel
@@ -30,6 +53,35 @@ Rockchip boards based on RV1103/RV1106 using ported rockchip-linux sources.
 - [ ] 📥 RAUC support for NAND
 - [ ] 📺 Support for some display controllers
 
+## ✨ Additional features
+
+Some functionality is not a device tree detail but a recipe the layer installs
+into the image.
+
+### Root filesystem auto-resize
+
+The `.wic` images are built to a fixed size, so a freshly flashed card would
+leave most of its capacity unused. The SD card machines depend on
+`resize-rootfs`, a one-shot init script that runs on first boot and grows the
+root partition and filesystem to the end of the card. It is a no-op afterwards,
+guarded by `/var/lib/resize-rootfs.done`.
+
+The script handles the fact that the root partition is in use: `sfdisk` rewrites
+the table with `--no-reread`, and the kernel is updated with `partx -u`, which
+falls back to the `BLKPG` resize ioctl when the partition cannot be deleted
+because it is mounted.
+
+### USB serial console
+
+Every board exposes its USB port as a CDC-ACM serial device, so the board can be
+logged into over the same cable that powers it, without a separate UART. The
+`usb-gadget-serial` recipe creates the gadget through configfs and the machine
+adds `115200;ttyGS0` to `SERIAL_CONSOLES`, so a getty is started on it.
+
+Only three modules are needed (`configfs`, `libcomposite` and `usb-f-acm`). Note
+that the gadget must be created from `rcS` (`start 41 S .`): `ttyrun` calls
+`pause()` when the tty does not exist yet, which would block the login prompt.
+
 ## 📷 Camera (SC3336 on MIPI CSI)
 
 Every machine enables the vendor camera stack, so attaching a Smartsens SC3336
@@ -39,11 +91,13 @@ module to the board's MIPI CSI connector works without any extra configuration:
 SC3336 -> CSI2 DPHY (2 lanes, 510 Mbps) -> MIPI CSI2 receiver -> CIF -> /dev/video0
 ```
 
-This needs no dedicated machine; the device tree of every board describes the
-camera and the image carries four modules: `sc3336`,
+This needs no dedicated machine: the device tree of every board includes
+`rv1106-camera.dtsi`, which describes the sensor, the CSI chain and the buffer
+memory, and the machine includes pull in four modules: `sc3336`,
 `phy-rockchip-csi2-dphy`, `phy-rockchip-csi2-dphy-hw` and
 `rockchip-cif-vendor`, plus `v4l-utils` and `i2c-tools` for debugging. Boards
-without a camera attached still boot normally, the sensor simply fails to probe.
+without a camera attached still boot normally; the sensor simply fails to probe
+with `sc3336 4-0030: Unexpected sensor id(000000)`.
 
 ### Capturing a frame
 
@@ -79,6 +133,18 @@ Three things are non-obvious and easy to break when touching the DTS:
   covers `0x68000` bytes like the vendor's single `grf` node. `regmap_write()`
   silently drops out-of-range writes and the vendor code ignores the error, so a
   too-small window disables the PHY and the CIF input select without a message.
+
+## 📁 Layer contents
+
+| Path | Contents |
+| --- | --- |
+| `conf/machine/*.conf` | one machine per board and boot medium |
+| `conf/machine/include/rv1103.inc`, `rv1106.inc` | shared SOC settings, serial consoles and the extra packages every image gets |
+| `recipes-kernel/linux/linux-yocto-dev.bbappend` | RV1106 clock, pinctrl, ethernet and USB patches, the camera stack and the board device trees |
+| `recipes-bsp/u-boot/u-boot_%.bbappend` | board defconfigs, device trees and the distro boot environment |
+| `recipes-core/resize-rootfs` | first-boot root filesystem growth |
+| `recipes-core/usb-gadget-serial` | USB CDC-ACM serial console |
+| `files/dts` | board device trees, the shared SOC dtsi files and `rv1106-camera.dtsi` |
 
 ## 🔗 Dependencies
 This layer depends on:
