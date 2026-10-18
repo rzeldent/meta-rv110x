@@ -29,6 +29,15 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-sc3336"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-phy-rockchip-csi2-dphy"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-phy-rockchip-csi2-dphy-hw"
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-cif-vendor"
+# Vision processor (VPU/NPU) kernel drivers: RGA 2D graphics, VDEC video
+# decoder and ISP1 camera ISP.
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-rga"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-vdec"
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-isp1"
+# Vision userspace libraries: MPP (VPU encode/decode), RGA (2D graphics),
+# RKAIQ (ISP 3A), rockit (image processing), RKNNMRT (NPU inference) and
+# rkadk (media framework).
+MACHINE_EXTRA_RRECOMMENDS += "libmpp librga librkaiq librockit librknnmrt rkadk"
 # Capture and bus inspection tools. packagegroup-core-boot only honours
 # MACHINE_ESSENTIAL_EXTRA_RDEPENDS, so list them there.
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "v4l-utils i2c-tools"

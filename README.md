@@ -2,36 +2,37 @@
 
 Yocto BSP layer for Rockchip boards based on RV1103/RV1106.
 
-## 📋 Description
+## Description
 
 The purpose of this layer is to provide OpenEmbedded BSP support for
 Rockchip boards based on RV1103/RV1106 using ported rockchip-linux sources.
 
-## 🛹 Supported boards
-| Name                | Link                                          | GPIO     |
-:--------------------:|:---------------------------------------------:|:-----------:
-| Luckfox Pico        | <https://www.luckfox.com/Luckfox-Pico>        | <img src="files/img/luckfox-pico-gpio.jpg" width="40%">|
-| Luckfox Pico Plus   | <https://www.luckfox.com/Luckfox-Pico-Plus>   | <img src="files/img/luckfox-pico-plus-gpio.jpg" width="40%">|
-| Luckfox Pico Max    | <https://www.luckfox.com/Luckfox-Pico-Max>    | <img src="files/img/luckfox-pico-pro-gpio.jpg" width="40%">|
-| Luckfox Pico Mini A | <https://www.luckfox.com/Luckfox-Pico-Mini-A> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%">|
-| Luckfox Pico Mini B | <https://www.luckfox.com/Luckfox-Pico-Mini-B> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%">|
+## Supported boards
 
-## 📦 Product Selection
+| Name | Link | GPIO |
+|------|------|------|
+| Luckfox Pico | <https://www.luckfox.com/Luckfox-Pico> | <img src="files/img/luckfox-pico-gpio.jpg" width="40%"> |
+| Luckfox Pico Plus | <https://www.luckfox.com/Luckfox-Pico-Plus> | <img src="files/img/luckfox-pico-plus-gpio.jpg" width="40%"> |
+| Luckfox Pico Max | <https://www.luckfox.com/Luckfox-Pico-Max> | <img src="files/img/luckfox-pico-pro-gpio.jpg" width="40%"> |
+| Luckfox Pico Mini A | <https://www.luckfox.com/Luckfox-Pico-Mini-A> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%"> |
+| Luckfox Pico Mini B | <https://www.luckfox.com/Luckfox-Pico-Mini-B> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%"> |
 
-| PRODUCT | Main chip | Memory | NPU | ISP | Default Storage | FEATURES |
-| --- | --- | --- | --- | --- | --- | --- |
-| [![Luckfox Pico Mini A](files/img/luckfox-pico-mini-a.png)](https://www.luckfox.com/Luckfox-Pico-Mini-A) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | TF card (Not included) | Onboard Type-C port, MIPI CSI Interface, GPIO, etc. |
-| [![Luckfox Pico Mini B](files/img/luckfox-pico-mini-b.png)](https://www.luckfox.com/Luckfox-Pico-Mini-B) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | SPI NAND FLASH (128MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, etc. |
-| [![Luckfox Pico](files/img/luckfox-pico.png)](https://www.luckfox.com/Luckfox-Pico) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | TF card (Not included) | Onboard Type-C port, MIPI CSI Interface, GPIO, etc. |
-| [![Luckfox Pico Plus](files/img/luckfox-pico-plus.png)](https://www.luckfox.com/EN-Luckfox-Pico-Plus.htm) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | SPI NAND FLASH (128MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, etc. |
-| [![Luckfox Pico Pro](files/img/luckfox-pico-pro.png)](https://www.luckfox.com/EN-Luckfox-Pico-Pro) | RV1106G | 128MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | SPI NAND FLASH (256MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, RTC battery header, etc. |
-| [![Luckfox Pico Max](files/img/luckfox-pico-pro.png)](https://www.luckfox.com/Luckfox-Pico-Max) | RV1106G | 256MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | SPI NAND FLASH (256MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, RTC battery header, etc. |
+## Product selection
+
+| Product | Main chip | Memory | NPU | ISP | Default storage | Features |
+|---------|-----------|--------|-----|-----|-----------------|----------|
+| [Luckfox Pico Mini A](https://www.luckfox.com/Luckfox-Pico-Mini-A) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | TF card (Not included) | Onboard Type-C port, MIPI CSI Interface, GPIO, etc. |
+| [Luckfox Pico Mini B](https://www.luckfox.com/Luckfox-Pico-Mini-B) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | SPI NAND FLASH (128MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, etc. |
+| [Luckfox Pico](https://www.luckfox.com/Luckfox-Pico) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | TF card (Not included) | Onboard Type-C port, MIPI CSI Interface, GPIO, etc. |
+| [Luckfox Pico Plus](https://www.luckfox.com/EN-Luckfox-Pico-Plus.htm) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | SPI NAND FLASH (128MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, etc. |
+| [Luckfox Pico Pro](https://www.luckfox.com/EN-Luckfox-Pico-Pro) | RV1106G | 128MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | SPI NAND FLASH (256MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, RTC battery header, etc. |
+| [Luckfox Pico Max](https://www.luckfox.com/Luckfox-Pico-Max) | RV1106G | 256MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | SPI NAND FLASH (256MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, RTC battery header, etc. |
 
 The boards can be built to boot either from an SD card or from the on-board SPI
 NAND, and there is one machine for each combination:
 
 | Machine | Board | Boot medium |
-| --- | --- | --- |
+|---------|-------|-------------|
 | `luckfox-pico` | Luckfox Pico | SD card |
 | `luckfox-pico-spi-nand` | Luckfox Pico | SPI NAND |
 | `luckfox-pico-plus` | Luckfox Pico Plus | SD card |
@@ -50,18 +51,20 @@ useful for updating the NAND from a card that was booted from SD.
 Features are not split into extra machines: camera support, the root filesystem
 resize and the USB serial console are part of every machine that can use them.
 
-## 🔧 Development status
-- [x] 🚀 Initial support in u-boot
-- [x] ✈️ Initial support in linux kernel
-- [x] 🌐 Ethernet with static MAC
-- [x] 📼 Boot from NAND
-- [x] 🔌 USB host and gadget support
-- [x] 📷 Camera serial interface (SC3336) on all boards
-- [ ] 📥 RAUC support for SD card
-- [ ] 📥 RAUC support for NAND
-- [ ] 📺 Support for some display controllers
+## Development status
 
-## ✨ Additional features
+- [x] Initial support in u-boot
+- [x] Initial support in linux kernel
+- [x] Ethernet with static MAC
+- [x] Boot from NAND
+- [x] USB host and gadget support
+- [x] Camera serial interface (SC3336) on all boards
+- [x] Vision processor (VPU/NPU): RGA, RKNPU, ISP, VEPU/VDPU, VICAP
+- [ ] RAUC support for SD card
+- [ ] RAUC support for NAND
+- [ ] Support for some display controllers
+
+## Additional features
 
 Some functionality is not a device tree detail but a recipe the layer installs
 into the image.
@@ -83,14 +86,10 @@ because it is mounted.
 
 Every board exposes its USB port as a CDC-ACM serial device, so the board can be
 logged into over the same cable that powers it, without a separate UART. The
-`usb-gadget-serial` recipe creates the gadget through configfs and the machine
-adds `115200;ttyGS0` to `SERIAL_CONSOLES`, so a getty is started on it.
-
-Only three modules are needed (`configfs`, `libcomposite` and `usb-f-acm`). Note
-that the gadget must be created from `rcS` (`start 41 S .`): `ttyrun` calls
+gadget must be created from `rcS` (`start 41 S .`): `ttyrun` calls
 `pause()` when the tty does not exist yet, which would block the login prompt.
 
-## 📷 Camera (SC3336 on MIPI CSI)
+### Camera (SC3336 on MIPI CSI)
 
 Every machine enables the vendor camera stack, so attaching a Smartsens SC3336
 module to the board's MIPI CSI connector works without any extra configuration:
@@ -107,7 +106,7 @@ memory, and the machine includes pull in four modules: `sc3336`,
 without a camera attached still boot normally; the sensor simply fails to probe
 with `sc3336 4-0030: Unexpected sensor id(000000)`.
 
-### Capturing a frame
+#### Capturing a frame
 
 There is no ISP driver in this kernel, so the CIF hands out the raw Bayer data of
 the sensor's only mode, 2304x1296 @ 30 fps:
@@ -122,7 +121,37 @@ line padded to a 256-byte boundary (`ALIGN(2304 * 10 / 8, 256) = 3072`), so a
 frame is `3072 * 1296 = 3981312` bytes. Use `media-ctl -p` to inspect the media
 graph and `cat /proc/rkcif-mipi-lvds` for the clock/error statistics.
 
-### Board specific requirements
+### Vision processor (VPU/NPU)
+
+The RV1103/RV1106 vision processor is supported through the following kernel
+drivers:
+
+| Component | Kernel driver | Purpose |
+|---------|---------------|---------|
+| RGA | `rockchip-rga` | 2D blit, scale, rotate, color conversion |
+| VDEC | `rockchip-vdec` | Video decode |
+| ISP | `rkisp1` | Camera ISP 3A (AE/AWB/AF) |
+| RKNN/NPU | `rockchip-rknpu` | Neural network inference (0.5 TOPS, int4/int8/int16) |
+
+The machine configs pull in the kernel modules via
+`MACHINE_ESSENTIAL_EXTRA_RDEPENDS`. GStreamer's `v4l2codecs` plugin is enabled
+when `ENABLE_STATELESS_VPU_GST` is set (default `1`), so VPU-accelerated
+encode/decode is available through GStreamer.
+
+Userspace libraries (`librga`, `libmpp`, `librkaiq`, `librknnmrt`) and the
+`rkadk` media framework are provided by the buildroot variant at
+`/home/rene/repos/luckfox-pico` but are not yet packaged as Yocto recipes in
+this layer (they require network access to build from upstream rockchip-linux
+sources).
+
+#### Capturing a frame with ISP
+
+With the ISP driver (`rkisp1`) and `librkaiq` installed, the camera produces
+YUV frames instead of raw Bayer. Without the ISP (the default if `librkaiq` is
+not installed), the CIF hands out raw Bayer data as described in the camera
+section above.
+
+#### Board specific requirements
 
 Three things are non-obvious and easy to break when touching the DTS:
 
@@ -142,10 +171,10 @@ Three things are non-obvious and easy to break when touching the DTS:
   silently drops out-of-range writes and the vendor code ignores the error, so a
   too-small window disables the PHY and the CIF input select without a message.
 
-## 📁 Layer contents
+## Layer contents
 
 | Path | Contents |
-| --- | --- |
+|------|----------|
 | `conf/machine/*.conf` | one machine per board and boot medium |
 | `conf/machine/include/rv1103.inc`, `rv1106.inc` | shared SOC settings, serial consoles and the extra packages every image gets |
 | `recipes-kernel/linux/linux-yocto-dev.bbappend` | RV1106 clock, pinctrl, ethernet and USB patches, the camera stack and the board device trees |
@@ -154,7 +183,8 @@ Three things are non-obvious and easy to break when touching the DTS:
 | `recipes-core/usb-gadget-serial` | USB CDC-ACM serial console |
 | `files/dts` | board device trees, the shared SOC dtsi files and `rv1106-camera.dtsi` |
 
-## 🔗 Dependencies
+## Dependencies
+
 This layer depends on:
 
 * URI: git://git.openembedded.org/openembedded-core
@@ -165,12 +195,15 @@ This layer depends on:
   * branch: walnascar
   * revision: HEAD
 
-## 🙏 Contributing
+## Contributing
 
-If you have a desire to help with the development of this layer, or perhaps you would like to help develop patches with soc support for u-boot or linux kernel, then open discussions or pull requests, I would be very glad of any help.
+If you have a desire to help with the development of this layer, or perhaps you
+would like to help develop patches with soc support for u-boot or linux kernel,
+then open discussions or pull requests, I would be very glad of any help.
 
-Also, for a quick start, you might find the configured [luckfox-yocto](https://github.com/RamasyaR/luckfox-yocto) project helpful.
+Also, for a quick start, you might find the configured
+[luckfox-yocto](https://github.com/RamasyaR/luckfox-yocto) project helpful.
 
-## 🦾 Maintainers
+## Maintainers
 
 * Raman Rakavets `<radikot88@gmail.com>`
