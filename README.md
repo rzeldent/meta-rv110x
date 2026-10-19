@@ -16,6 +16,7 @@ Rockchip boards based on RV1103/RV1106 using ported rockchip-linux sources.
 | Luckfox Pico Max | <https://www.luckfox.com/Luckfox-Pico-Max> | <img src="files/img/luckfox-pico-pro-gpio.jpg" width="40%"> |
 | Luckfox Pico Mini A | <https://www.luckfox.com/Luckfox-Pico-Mini-A> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%"> |
 | Luckfox Pico Mini B | <https://www.luckfox.com/Luckfox-Pico-Mini-B> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%"> |
+| Luckfox Pico Pi | <https://www.luckfox.com/Luckfox-Pico-Pi> | <img src="files/img/luckfox-pico-gpio.jpg" width="40%"> |
 
 ## Product selection
 
@@ -27,29 +28,45 @@ Rockchip boards based on RV1103/RV1106 using ported rockchip-linux sources.
 | [Luckfox Pico Plus](https://www.luckfox.com/EN-Luckfox-Pico-Plus.htm) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | SPI NAND FLASH (128MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, etc. |
 | [Luckfox Pico Pro](https://www.luckfox.com/EN-Luckfox-Pico-Pro) | RV1106G | 128MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | SPI NAND FLASH (256MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, RTC battery header, etc. |
 | [Luckfox Pico Max](https://www.luckfox.com/Luckfox-Pico-Max) | RV1106G | 256MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | SPI NAND FLASH (256MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, RTC battery header, etc. |
+| [Luckfox Pico Pi](https://www.luckfox.com/Luckfox-Pico-Pi) | RV1106G | 128MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | eMMC (8GB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, WiFi 6/BT 5.2 (AIC8800DC), etc. |
 
-The boards can be built to boot either from an SD card or from the on-board SPI
-NAND, and there is one machine for each combination:
+## Machine configurations
 
-| Machine | Board | Boot medium |
-|---------|-------|-------------|
-| `luckfox-pico` | Luckfox Pico | SD card |
-| `luckfox-pico-spi-nand` | Luckfox Pico | SPI NAND |
-| `luckfox-pico-plus` | Luckfox Pico Plus | SD card |
-| `luckfox-pico-plus-spi-nand` | Luckfox Pico Plus | SPI NAND |
-| `luckfox-pico-max` | Luckfox Pico Max | SD card |
-| `luckfox-pico-max-spi-nand` | Luckfox Pico Max | SPI NAND |
-| `luckfox-pico-mini-a` | Luckfox Pico Mini A | SD card |
-| `luckfox-pico-mini-b` | Luckfox Pico Mini B | SD card |
-| `luckfox-pico-mini-b-sdcard` | Luckfox Pico Mini B, SPI NAND exposed as MTD | SD card |
-| `luckfox-pico-mini-b-spi-nand` | Luckfox Pico Mini B | SPI NAND |
+There are 6 base machine configurations (one per board). Optional features are controlled via the `LUCKFOX_FEATURES` variable instead of separate machine names for each combination.
 
-The Mini B has two SD card variants: `luckfox-pico-mini-b-sdcard` additionally
-enables the on-board SPI NAND so it shows up as a raw MTD device, which is
-useful for updating the NAND from a card that was booted from SD.
+| Machine | Board | SoC |
+|---------|-------|-----|
+| `luckfox-pico` | Luckfox Pico | RV1106 |
+| `luckfox-pico-plus` | Luckfox Pico Plus | RV1106 |
+| `luckfox-pico-max` | Luckfox Pico Max | RV1106 |
+| `luckfox-pico-mini-a` | Luckfox Pico Mini A | RV1103G |
+| `luckfox-pico-mini-b` | Luckfox Pico Mini B | RV1103G |
+| `luckfox-pico-pi` | Luckfox Pico Pi | RV1106 |
 
-Features are not split into extra machines: camera support, the root filesystem
-resize and the USB serial console are part of every machine that can use them.
+### Feature flags (`LUCKFOX_FEATURES`)
+
+Features are space-separated tokens passed via `LUCKFOX_FEATURES` (in `local.conf`, environment, or VS Code build configuration). The default is `camera aic8800dc npu vcodec`.
+
+| Feature | Description |
+| --- | --- |
+| `camera` | MIPI CSI camera stack (SC3336 sensor, CIF, ISP1) |
+| `aic8800dc` | AIC8800DC WiFi/BT via SDIO (kernel modules, firmware, init, wpa-supplicant, bluez5) |
+| `npu` | Rockchip NPU kernel driver (rknpu) |
+| `vcodec` | VPU/VIDEO codec kernel drivers (RGA, VDEC) |
+| `nand` | SPI NAND boot (UBOOT_CONFIG=spi-nand, UBIFS images) |
+| `nand-mtd` | SPI NAND exposed as MTD (for Mini B SD card variant with NAND populated) |
+
+**Examples:**
+- SD card boot with all features (default): `MACHINE=luckfox-pico-max`
+- SPI NAND boot: `MACHINE=luckfox-pico-max LUCKFOX_FEATURES="camera aic8800dc npu vcodec nand"`
+- Minimal build (no camera, no WiFi, no NPU): `MACHINE=luckfox-pico LUCKFOX_FEATURES=""`
+- Mini B with SD boot but NAND exposed as MTD: `MACHINE=luckfox-pico-mini-b LUCKFOX_FEATURES="camera aic8800dc npu vcodec nand-mtd"`
+
+The Mini B has two SD card variants: the default `luckfox-pico-mini-b` boots from SD, and adding the `nand-mtd` feature additionally enables the on-board SPI NAND so it shows up as a raw MTD device, which is useful for updating the NAND from a card that was booted from SD.
+
+WiFi 6 (802.11ax) and Bluetooth 5.2 are provided by the AIC8800DC module, which plugs into the SD card slot and is driven over SDIO. Every machine in this layer installs the driver, firmware and init scripts when the `aic8800dc` feature is enabled (enabled by default), so the module works on any board that has the slot populated.
+
+Features are not split into extra machines: camera support, the root filesystem resize and the USB serial console are part of every machine that can use them (controlled via `LUCKFOX_FEATURES`).
 
 ## Development status
 
@@ -60,6 +77,7 @@ resize and the USB serial console are part of every machine that can use them.
 - [x] USB host and gadget support
 - [x] Camera serial interface (SC3336) on all boards
 - [x] Vision processor (VPU/NPU): RGA, RKNPU, ISP, VEPU/VDPU, VICAP
+- [x] WiFi 6 / Bluetooth 5.2 (AIC8800DC) on all boards with an SD card slot
 - [ ] RAUC support for SD card
 - [ ] RAUC support for NAND
 - [ ] Support for some display controllers
@@ -120,6 +138,36 @@ The layout is Rockchip "compact" RAW10: 4 pixels packed in 5 bytes, and each
 line padded to a 256-byte boundary (`ALIGN(2304 * 10 / 8, 256) = 3072`), so a
 frame is `3072 * 1296 = 3981312` bytes. Use `media-ctl -p` to inspect the media
 graph and `cat /proc/rkcif-mipi-lvds` for the clock/error statistics.
+
+### WiFi 6 / Bluetooth 5.2 (AIC8800DC)
+
+The AIC8800DC module plugs into the SD card slot and is driven over SDIO. It is
+supported by the `aic8800dc` recipe, which builds three out-of-tree modules:
+
+| Module | Purpose |
+|--------|---------|
+| `aic8800_bsp` | SDIO bus glue and firmware download |
+| `aic8800_fdrv` | Full MAC 802.11ax driver |
+| `aic8800_btlpm` | Bluetooth low-power management |
+
+The driver source is taken from [radxa-pkg/aic8800](https://github.com/radxa-pkg/aic8800)
+(GPL-2.0), which is maintained against current kernels and already carries the
+`struct wireless_dev` migration that Linux 7.1 introduced for `cfg80211_ops`.
+The vendor driver shipped in the buildroot tree targets Linux 5.10 and does not
+compile against this layer's kernel.
+
+Firmware is installed to `/lib/firmware/aic8800_fw/SDIO/aic8800DC`, which is
+where the driver looks for it. The `aic8800dc-init` recipe installs
+`/etc/init.d/hciinit` (started as `S99hciinit`), which loads the modules through
+`/etc/wifi/wifi_bt_init.sh`, attaches the Bluetooth HCI transport on UART1 at
+1500000 baud and brings up `wlan0`.
+
+The device tree wires the module up as follows:
+
+* `&sdmmc` (mmc1) is the SDIO WiFi interface, with `mmc-pwrseq = <&sdio_pwrseq>`
+  and reset GPIO `gpio1 RK_PA2`.
+* `&sdio` (mmc2) stays the SD card slot (`no-sdio`, `supports-sd`).
+* `&uart1` carries Bluetooth, with RTS on `gpio0 RK_PA5`.
 
 ### Vision processor (VPU/NPU)
 

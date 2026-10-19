@@ -22,25 +22,15 @@ MACHINE_EXTRA_RRECOMMENDS += "kernel-modules"
 
 ENABLE_STATELESS_VPU_GST ?= "1"
 
-# MIPI CSI camera stack: the SC3336 sensor, CSI2 DPHY, MIPI CSI2 receiver and
-# the CIF capture device. Every board describes the camera in its device tree,
-# so a module plugged into the MIPI connector works out of the box.
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-sc3336"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-phy-rockchip-csi2-dphy"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-phy-rockchip-csi2-dphy-hw"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-cif-vendor"
-# Vision processor (VPU/NPU) kernel drivers: RGA 2D graphics, VDEC video
-# decoder and ISP1 camera ISP.
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-rga"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-vdec"
+# ISP1 camera ISP kernel driver (required for camera feature)
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-isp1"
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-rknpu"
+
 # Vision userspace libraries: MPP (VPU encode/decode), RGA (2D graphics),
 # RKAIQ (ISP 3A), rockit (image processing), RKNNMRT (NPU inference) and
 # rkadk (media framework).
 # These are not packaged as Yocto recipes in this layer yet (see README),
 # so they cannot be listed as recommendations without breaking the build.
 #MACHINE_EXTRA_RRECOMMENDS += "libmpp librga librkaiq librockit librknnmrt rkadk"
-# Capture and bus inspection tools. packagegroup-core-boot only honours
-# MACHINE_ESSENTIAL_EXTRA_RDEPENDS, so list them there.
+
+# Capture and bus inspection tools
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "v4l-utils i2c-tools"

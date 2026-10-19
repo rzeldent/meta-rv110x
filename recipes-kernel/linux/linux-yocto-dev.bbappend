@@ -3,65 +3,14 @@ FILESEXTRAPATHS:prepend := "${RV110X_DTS}:"
 
 require recipes-kernel/linux/linux-rockchip.inc
 
-KBRANCH:luckfox-pico-mini = "v7.1/standard/base"
-KBRANCH:luckfox-pico-mini-a = "v7.1/standard/base"
-KBRANCH:luckfox-pico-mini-b = "v7.1/standard/base"
-KBRANCH:luckfox-pico-mini-b-sdcard = "v7.1/standard/base"
-KBRANCH:luckfox-pico-mini-b-spi-nand = "v7.1/standard/base"
-KBRANCH:luckfox-pico = "v7.1/standard/base"
-KBRANCH:luckfox-pico-spi-nand = "v7.1/standard/base"
-KBRANCH:luckfox-pico-plus = "v7.1/standard/base"
-KBRANCH:luckfox-pico-plus-spi-nand = "v7.1/standard/base"
-KBRANCH:luckfox-pico-max = "v7.1/standard/base"
-KBRANCH:luckfox-pico-max-spi-nand = "v7.1/standard/base"
+# All Luckfox machines use the same kernel branch and revision
+KBRANCH = "v7.1/standard/base"
+SRCREV_machine = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
+SRCREV_meta = "0a0706de0ba02be2cac13def96a65b40a52666bc"
+LINUX_VERSION = "7.1"
 
-SRCREV_machine:luckfox-pico-mini = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_meta:luckfox-pico-mini = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_machine:luckfox-pico-mini-a = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_meta:luckfox-pico-mini-a = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_machine:luckfox-pico-mini-b = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_machine:luckfox-pico-mini-b-sdcard = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_meta:luckfox-pico-mini-b = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_meta:luckfox-pico-mini-b-sdcard = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_machine:luckfox-pico-mini-b-spi-nand = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_meta:luckfox-pico-mini-b-spi-nand = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_machine:luckfox-pico = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_meta:luckfox-pico = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_machine:luckfox-pico-spi-nand = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_meta:luckfox-pico-spi-nand = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_machine:luckfox-pico-plus = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_meta:luckfox-pico-plus = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_machine:luckfox-pico-plus-spi-nand = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_meta:luckfox-pico-plus-spi-nand = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_machine:luckfox-pico-max = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_meta:luckfox-pico-max = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-SRCREV_machine:luckfox-pico-max-spi-nand = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
-SRCREV_meta:luckfox-pico-max-spi-nand = "0a0706de0ba02be2cac13def96a65b40a52666bc"
-
-LINUX_VERSION:luckfox-pico-mini = "7.1"
-LINUX_VERSION:luckfox-pico-mini-a = "7.1"
-LINUX_VERSION:luckfox-pico-mini-b = "7.1"
-LINUX_VERSION:luckfox-pico-mini-b-sdcard = "7.1"
-LINUX_VERSION:luckfox-pico-mini-b-spi-nand = "7.1"
-LINUX_VERSION:luckfox-pico = "7.1"
-LINUX_VERSION:luckfox-pico-spi-nand = "7.1"
-LINUX_VERSION:luckfox-pico-plus = "7.1"
-LINUX_VERSION:luckfox-pico-plus-spi-nand = "7.1"
-LINUX_VERSION:luckfox-pico-max = "7.1"
-LINUX_VERSION:luckfox-pico-max-spi-nand = "7.1"
-
-
-COMPATIBLE_MACHINE:luckfox-pico-mini = "luckfox-pico-mini"
-COMPATIBLE_MACHINE:luckfox-pico-mini-a = "luckfox-pico-mini-a"
-COMPATIBLE_MACHINE:luckfox-pico-mini-b = "luckfox-pico-mini-b"
-COMPATIBLE_MACHINE:luckfox-pico-mini-b-sdcard = "luckfox-pico-mini-b-sdcard"
-COMPATIBLE_MACHINE:luckfox-pico-mini-b-spi-nand = "luckfox-pico-mini-b-spi-nand"
-COMPATIBLE_MACHINE:luckfox-pico = "luckfox-pico"
-COMPATIBLE_MACHINE:luckfox-pico-spi-nand = "luckfox-pico-spi-nand"
-COMPATIBLE_MACHINE:luckfox-pico-plus = "luckfox-pico-plus"
-COMPATIBLE_MACHINE:luckfox-pico-plus-spi-nand = "luckfox-pico-plus-spi-nand"
-COMPATIBLE_MACHINE:luckfox-pico-max = "luckfox-pico-max"
-COMPATIBLE_MACHINE:luckfox-pico-max-spi-nand = "luckfox-pico-max-spi-nand"
+# All 6 base machines are compatible
+COMPATIBLE_MACHINE = "(luckfox-pico|luckfox-pico-plus|luckfox-pico-max|luckfox-pico-mini-a|luckfox-pico-mini-b|luckfox-pico-pi)"
 
 SRC_URI += " \
     file://0001-dt-bindings-clock-rockchip-add-rv1106-cru-support.patch \
@@ -96,6 +45,8 @@ SRC_URI += " \
     file://remove-snd-drivers.cfg \
     file://remove-usb-drivers.cfg \
     file://remove-wlan-drivers.cfg \
+    file://enable-wifi-sdio.cfg \
+    file://rfkill-wlan.h \
     file://phy-rockchip-csi2-dphy-common.h \
     file://rkcif-vendor/ \
     file://phy-rockchip-csi2-dphy-hw.c \
@@ -108,13 +59,13 @@ SRC_URI += " \
     file://sc3336.c \
     file://rv1103g-luckfox-pico-mini-a.dts \
     file://rv1103g-luckfox-pico-mini-b.dts \
-    file://rv1103g-luckfox-pico-mini-b-sdcard.dts \
     file://rv1103g-luckfox-pico-mini.dtsi \
     file://rv1106-camera.dtsi \
     file://rv1103g.dtsi \
     file://rv1106-luckfox-pico.dts \
     file://rv1106-luckfox-pico-plus.dts \
     file://rv1106g-luckfox-pico-pro-max.dts \
+    file://rv1106g-luckfox-pico-pi.dts \
     file://rv1106-luckfox-pico-pro-max-ipc.dtsi \
     file://rv1103-luckfox-pico-ipc.dtsi \
     file://rv1106-evb.dtsi \
@@ -146,15 +97,16 @@ do_patch:append() {
     cp ${UNPACKDIR}/phy-rockchip-samsung-dcphy.h ${S}/drivers/phy/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-a.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-b.dts ${S}/arch/arm/boot/dts/rockchip/
-    cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-b-sdcard.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106-camera.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106-luckfox-pico.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106-luckfox-pico-plus.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106g-luckfox-pico-pro-max.dts ${S}/arch/arm/boot/dts/rockchip/
+    cp ${UNPACKDIR}/rv1106g-luckfox-pico-pi.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106-luckfox-pico-pro-max-ipc.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103-luckfox-pico-ipc.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106-pinctrl.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106.dtsi ${S}/arch/arm/boot/dts/rockchip/
+    cp ${UNPACKDIR}/rfkill-wlan.h ${S}/include/linux/
 }

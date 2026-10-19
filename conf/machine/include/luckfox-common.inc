@@ -1,0 +1,36 @@
+# Common Luckfox machine configuration
+#
+# This file is included by all Luckfox machine configurations.
+# It contains the shared boilerplate that was previously duplicated
+# across all 12 machine confs.
+
+require conf/machine/include/luckfox-features.inc
+
+MACHINE_EXTRA_RRECOMMENDS += "kernel-modules"
+
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "resize-rootfs"
+
+# Base MACHINE_FEATURES common to all Luckfox boards
+MACHINE_FEATURES += "usbhost usbgadget wifi bluetooth"
+
+# The AIC8800DC feature pulls in its own deps via luckfox-features.inc
+# but we keep the feature enabled by default in LUCKFOX_FEATURES
+
+# Serial consoles: ttyS2 (UART) + ttyGS0 (USB gadget)
+SERIAL_CONSOLES = "115200;ttyS2 115200;ttyGS0"
+
+# Kernel
+PREFERRED_PROVIDER_virtual/kernel = "linux-yocto-dev"
+KBUILD_DEFCONFIG = "multi_v7_defconfig"
+
+# U-Boot
+UBOOT_SUFFIX ?= "img"
+
+# WIC (SD card images)
+require conf/machine/include/rockchip-wic.inc
+
+# VPU/VIDEO codec userspace (not yet packaged as recipes)
+ENABLE_STATELESS_VPU_GST ?= "1"
+
+# Capture and bus inspection tools
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "v4l-utils i2c-tools"
