@@ -32,6 +32,7 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:camera = " \
     kernel-module-phy-rockchip-csi2-dphy \
     kernel-module-phy-rockchip-csi2-dphy-hw \
     kernel-module-rockchip-cif-vendor \
+    kernel-module-rockchip-isp1 \
 "
 
 # ---------------------------------------------------------------------------

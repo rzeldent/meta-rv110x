@@ -35,7 +35,10 @@ printf ',+,\n' | sfdisk --no-reread --no-tell-kernel -N "$PART" "$DISK"
 # table and applies the change to the kernel; for the mounted root partition
 # the delete fails with EBUSY and partx falls back to the BLKPG resize ioctl,
 # which works on a partition that is currently mounted.
-partx -u -n "$PART" "$DISK" 2>/dev/null || true
+if ! partx -u -n "$PART" "$DISK"; then
+    echo "resize-rootfs: failed to update the kernel partition size; will retry on next boot" >&2
+    exit 1
+fi
 
 # The kernel may still report the old size for the mounted root device, so grow
 # the filesystem online.

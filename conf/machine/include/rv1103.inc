@@ -23,9 +23,6 @@ MACHINE_EXTRA_RRECOMMENDS += "kernel-modules"
 
 ENABLE_STATELESS_VPU_GST ?= "1"
 
-# ISP1 camera ISP kernel driver (required for camera feature)
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "kernel-module-rockchip-isp1"
-
 # Vision userspace libraries: MPP (VPU encode/decode), RGA (2D graphics),
 # RKAIQ (ISP 3A), rockit (image processing), RKNNMRT (NPU inference) and
 # rkadk (media framework).
