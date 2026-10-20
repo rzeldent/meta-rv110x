@@ -9,8 +9,8 @@ SRCREV_machine = "20319339d760fcb55c7c17ce139db207e5ae7cd3"
 SRCREV_meta = "0a0706de0ba02be2cac13def96a65b40a52666bc"
 LINUX_VERSION = "7.1"
 
-# All 6 base machines are compatible
-COMPATIBLE_MACHINE = "(luckfox-pico|luckfox-pico-plus|luckfox-pico-max|luckfox-pico-mini-a|luckfox-pico-mini-b|luckfox-pico-pi)"
+# All 5 base machines are compatible
+COMPATIBLE_MACHINE = "(luckfox-pico(-plus|-max|-mini|-pi)?-(sd-card|spi-nand))"
 
 SRC_URI += " \
     file://0001-dt-bindings-clock-rockchip-add-rv1106-cru-support.patch \

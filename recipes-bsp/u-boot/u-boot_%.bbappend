@@ -36,6 +36,7 @@ SRC_URI += " \
     file://rv1103g-luckfox-pico-mini-b-u-boot.dtsi;subdir=${P}/arch/arm/dts/ \
     file://luckfox-pico-mini-a-rv1103g_defconfig;subdir=${P}/configs/ \
     file://luckfox-pico-mini-b-rv1103g_defconfig;subdir=${P}/configs/ \
+    file://luckfox-pico-mini-rv1103g_defconfig;subdir=${P}/configs/ \
     file://luckfox-pico-rv1106_defconfig;subdir=${P}/configs/ \
     file://luckfox-pico-plus-rv1106_defconfig;subdir=${P}/configs/ \
     file://luckfox-pico-max-rv1106_defconfig;subdir=${P}/configs/ \

@@ -1,16 +1,14 @@
 # Luckfox Pico (RV1106)
-# Base machine configuration - features controlled via LUCKFOX_FEATURES
-# Default features: camera aic8800dc npu vcodec
-# Add "nand" for SPI NAND boot, "nand-mtd" for NAND exposed as MTD
+# Board definition shared by the -sd-card (SD card) and -spi-nand (SPI NAND) machines.
+# Do not use directly; select ${MACHINE}-sd-card or ${MACHINE}-spi-nand instead.
 
 require conf/machine/include/rv1106.inc
 require conf/machine/include/luckfox-common.inc
 
 KERNEL_DEVICETREE = "rockchip/rv1106-luckfox-pico.dtb"
 
-UBOOT_CONFIG ??= "sdcard"
 UBOOT_CONFIG[sdcard] = "luckfox-pico-rv1106_defconfig"
-UBOOT_CONFIG[nand] = "luckfox-pico-rv1106_defconfig"
+UBOOT_CONFIG[spi-nand] = "luckfox-pico-rv1106_defconfig"
 
 # Max adds rk-u-boot-env for saveable U-Boot environment
 # MACHINE_FEATURES += "rk-u-boot-env"

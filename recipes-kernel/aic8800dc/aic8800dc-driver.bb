@@ -46,7 +46,5 @@ do_install() {
 # kernel-module-split creates one package per module and makes each of them
 # provide the unsuffixed "kernel-module-<name>" alias, so the .ko files must
 # not be claimed by the main package.
-PACKAGES =+ "${PN}-firmware"
-FILES:${PN}-firmware = "${nonarch_base_libdir}/firmware/aic8800_fw/SDIO/aic8800DC/*"
-
-RPROVIDES:${PN}-firmware += "aic8800dc-firmware"
+PACKAGES =+ "aic8800dc-firmware"
+FILES:aic8800dc-firmware = "${nonarch_base_libdir}/firmware/aic8800_fw/SDIO/aic8800DC/*"

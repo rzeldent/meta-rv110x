@@ -14,8 +14,7 @@ Rockchip boards based on RV1103/RV1106 using ported rockchip-linux sources.
 | Luckfox Pico | <https://www.luckfox.com/Luckfox-Pico> | <img src="files/img/luckfox-pico-gpio.jpg" width="40%"> |
 | Luckfox Pico Plus | <https://www.luckfox.com/Luckfox-Pico-Plus> | <img src="files/img/luckfox-pico-plus-gpio.jpg" width="40%"> |
 | Luckfox Pico Max | <https://www.luckfox.com/Luckfox-Pico-Max> | <img src="files/img/luckfox-pico-pro-gpio.jpg" width="40%"> |
-| Luckfox Pico Mini A | <https://www.luckfox.com/Luckfox-Pico-Mini-A> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%"> |
-| Luckfox Pico Mini B | <https://www.luckfox.com/Luckfox-Pico-Mini-B> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%"> |
+| Luckfox Pico Mini A/B | <https://www.luckfox.com/Luckfox-Pico-Mini-A> | <img src="files/img/luckfox-pico-mini-gpio.jpg" width="40%"> |
 | Luckfox Pico Pi | <https://www.luckfox.com/Luckfox-Pico-Pi> | <img src="files/img/luckfox-pico-gpio.jpg" width="40%"> |
 
 ## Product selection
@@ -32,16 +31,15 @@ Rockchip boards based on RV1103/RV1106 using ported rockchip-linux sources.
 
 ## Machine configurations
 
-There are 6 base machine configurations (one per board). Optional features are controlled via the `LUCKFOX_FEATURES` variable instead of separate machine names for each combination.
+There are 10 machines: each of the 5 boards comes in a `-sd-card` variant (SD card, wic image) and a `-spi-nand` variant (SPI NAND, UBI image, spi-nand U-Boot). Optional features are controlled via the `LUCKFOX_FEATURES` variable.
 
 | Machine | Board | SoC |
 |---------|-------|-----|
-| `luckfox-pico` | Luckfox Pico | RV1106 |
-| `luckfox-pico-plus` | Luckfox Pico Plus | RV1106 |
-| `luckfox-pico-max` | Luckfox Pico Max | RV1106 |
-| `luckfox-pico-mini-a` | Luckfox Pico Mini A | RV1103G |
-| `luckfox-pico-mini-b` | Luckfox Pico Mini B | RV1103G |
-| `luckfox-pico-pi` | Luckfox Pico Pi | RV1106 |
+| `luckfox-pico-sd-card`, `luckfox-pico-spi-nand` | Luckfox Pico | RV1106 |
+| `luckfox-pico-plus-sd-card`, `luckfox-pico-plus-spi-nand` | Luckfox Pico Plus | RV1106 |
+| `luckfox-pico-max-sd-card`, `luckfox-pico-max-spi-nand` | Luckfox Pico Max | RV1106 |
+| `luckfox-pico-mini-sd-card`, `luckfox-pico-mini-spi-nand` | Luckfox Pico Mini A/B | RV1103G |
+| `luckfox-pico-pi-sd-card`, `luckfox-pico-pi-spi-nand` | Luckfox Pico Pi | RV1106 |
 
 ### Feature flags (`LUCKFOX_FEATURES`)
 
@@ -53,20 +51,17 @@ Features are space-separated tokens passed via `LUCKFOX_FEATURES` (in `local.con
 | `aic8800dc` | AIC8800DC WiFi/BT via SDIO (kernel modules, firmware, init, wpa-supplicant, bluez5) |
 | `npu` | Rockchip NPU kernel driver (rknpu) |
 | `vcodec` | VPU/VIDEO codec kernel drivers (RGA, VDEC) |
-| `nand` | SPI NAND boot (UBOOT_CONFIG=spi-nand, UBIFS images) |
-| `nand-mtd` | SPI NAND exposed as MTD (for Mini B SD card variant with NAND populated) |
 
 **Examples:**
-- SD card boot with all features (default): `MACHINE=luckfox-pico-max`
-- SPI NAND boot: `MACHINE=luckfox-pico-max LUCKFOX_FEATURES="camera aic8800dc npu vcodec nand"`
-- Minimal build (no camera, no WiFi, no NPU): `MACHINE=luckfox-pico LUCKFOX_FEATURES=""`
-- Mini B with SD boot but NAND exposed as MTD: `MACHINE=luckfox-pico-mini-b LUCKFOX_FEATURES="camera aic8800dc npu vcodec nand-mtd"`
+- SD card boot with all features (default): `MACHINE=luckfox-pico-max-sd-card`
+- SPI NAND boot: `MACHINE=luckfox-pico-max-spi-nand`
+- Minimal build (no camera, no WiFi, no NPU): `MACHINE=luckfox-pico-sd-card LUCKFOX_FEATURES=""`
 
-The Mini B has two SD card variants: the default `luckfox-pico-mini-b` boots from SD, and adding the `nand-mtd` feature additionally enables the on-board SPI NAND so it shows up as a raw MTD device, which is useful for updating the NAND from a card that was booted from SD.
+The Mini A/B boards use a single machine configuration (`luckfox-pico-mini`) with the Mini B device tree (which includes the SPI NAND node). When booting from SD card, the NAND is exposed as MTD for updates. When booting from NAND, use the `-spi-nand` machine.
 
 WiFi 6 (802.11ax) and Bluetooth 5.2 are provided by the AIC8800DC module, which plugs into the SD card slot and is driven over SDIO. Every machine in this layer installs the driver, firmware and init scripts when the `aic8800dc` feature is enabled (enabled by default), so the module works on any board that has the slot populated.
 
-Features are not split into extra machines: camera support, the root filesystem resize and the USB serial console are part of every machine that can use them (controlled via `LUCKFOX_FEATURES`).
+Features are not split into extra machines: camera support and the USB serial console are part of every machine that can use them (controlled via `LUCKFOX_FEATURES`). Root filesystem auto-resize is installed only on SD card machines.
 
 ## Development status
 
@@ -76,7 +71,8 @@ Features are not split into extra machines: camera support, the root filesystem 
 - [x] Boot from NAND
 - [x] USB host and gadget support
 - [x] Camera serial interface (SC3336) on all boards
-- [x] Vision processor (VPU/NPU): RGA, RKNPU, ISP, VEPU/VDPU, VICAP
+- [x] Vision processor (VPU): RGA, ISP, VEPU/VDPU, VICAP
+- [ ] NPU (RKNN): no RV1103/RV1106 driver in the mainline kernel, see below
 - [x] WiFi 6 / Bluetooth 5.2 (AIC8800DC) on all boards with an SD card slot
 - [ ] RAUC support for SD card
 - [ ] RAUC support for NAND
@@ -179,12 +175,18 @@ drivers:
 | RGA | `rockchip-rga` | 2D blit, scale, rotate, color conversion |
 | VDEC | `rockchip-vdec` | Video decode |
 | ISP | `rkisp1` | Camera ISP 3A (AE/AWB/AF) |
-| RKNN/NPU | `rockchip-rknpu` | Neural network inference (0.5 TOPS, int4/int8/int16) |
 
 The machine configs pull in the kernel modules via
 `MACHINE_ESSENTIAL_EXTRA_RDEPENDS`. GStreamer's `v4l2codecs` plugin is enabled
 when `ENABLE_STATELESS_VPU_GST` is set (default `1`), so VPU-accelerated
 encode/decode is available through GStreamer.
+
+The NPU is **not** available in this layer. The mainline kernel has no
+RV1103/RV1106 NPU driver: the only in-tree candidate, `drivers/accel/rocket`,
+targets RK3588 and is gated on `ARM64`, and the vendor `drivers/rknpu` driver
+from the 5.10 buildroot tree has not been ported to this kernel. The `npu`
+feature flag is still accepted so that existing `LUCKFOX_FEATURES` lists keep
+working, but it currently pulls in nothing.
 
 Userspace libraries (`librga`, `libmpp`, `librkaiq`, `librknnmrt`) and the
 `rkadk` media framework are provided by the buildroot variant at

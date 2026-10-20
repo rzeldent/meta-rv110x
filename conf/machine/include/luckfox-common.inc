@@ -8,8 +8,6 @@ require conf/machine/include/luckfox-features.inc
 
 MACHINE_EXTRA_RRECOMMENDS += "kernel-modules"
 
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS += "resize-rootfs"
-
 # Base MACHINE_FEATURES common to all Luckfox boards
 MACHINE_FEATURES += "usbhost usbgadget wifi bluetooth"
 
@@ -23,11 +21,9 @@ SERIAL_CONSOLES = "115200;ttyS2 115200;ttyGS0"
 PREFERRED_PROVIDER_virtual/kernel = "linux-yocto-dev"
 KBUILD_DEFCONFIG = "multi_v7_defconfig"
 
-# U-Boot
+# U-Boot: UBOOT_CONFIG and the image types are selected by the -sd-card / -spi-nand
+# machine (see luckfox-sd-card.inc and luckfox-spi-nand.inc).
 UBOOT_SUFFIX ?= "img"
-
-# WIC (SD card images)
-require conf/machine/include/rockchip-wic.inc
 
 # VPU/VIDEO codec userspace (not yet packaged as recipes)
 ENABLE_STATELESS_VPU_GST ?= "1"
