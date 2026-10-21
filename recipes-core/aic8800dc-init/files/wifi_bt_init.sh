@@ -20,7 +20,7 @@ fi
 # Load kernel modules
 MODDIR=/lib/modules/$(uname -r)/kernel/drivers/net/wireless/aic8800
 if [ -d "$MODDIR" ]; then
-    if [ -z "$(ifconfig | grep wlan0)" ]; then
+    if [ ! -d /sys/class/net/wlan0 ]; then
         echo "Loading AIC8800DC WiFi/BT modules..."
         modprobe cfg80211 2>/dev/null || true
         modprobe libarc4 2>/dev/null || true
@@ -44,7 +44,7 @@ if [ -d /var/run/wpa_supplicant ]; then
 fi
 
 # Start wpa_supplicant if config exists
-if [ -f /etc/wpa_supplicant.conf ] && [ -n "$(ifconfig | grep wlan0)" ]; then
+if [ -f /etc/wpa_supplicant.conf ] && [ -d /sys/class/net/wlan0 ]; then
     wpa_supplicant -B -i wlan0 -c /etc/wpa_supplicant.conf >/dev/null
     chmod a+x /usr/share/udhcpc/default.script
 fi

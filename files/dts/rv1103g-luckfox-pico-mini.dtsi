@@ -77,12 +77,20 @@
 
 &sdmmc {
 	max-frequency = <50000000>;
-	no-sdio;
 	no-mmc;
 	bus-width = <4>;
 	cap-mmc-highspeed;
 	cap-sd-highspeed;
 	disable-wp;
+
+	/* AIC8800DC WiFi module plugged into the slot: SDIO, always present */
+	supports-sdio;
+	cap-sdio-irq;
+	non-removable;
+	no-1-8-v;
+
+	pinctrl-names = "default";
+	pinctrl-0 = <&sdmmc0_clk &sdmmc0_cmd &sdmmc0_det &sdmmc0_bus4>;
 	status = "okay";
 };
 

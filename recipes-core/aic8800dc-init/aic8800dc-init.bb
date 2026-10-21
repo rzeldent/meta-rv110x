@@ -20,4 +20,4 @@ do_install() {
     install -m 0755 ${S}/wifi_bt_init.sh ${D}${sysconfdir}/wifi/
 }
 
-RDEPENDS:${PN} += "aic8800dc-driver aic8800dc-firmware"
+RDEPENDS:${PN} += "aic8800dc-driver aic8800dc-firmware iproute2 wireless-regdb-static"

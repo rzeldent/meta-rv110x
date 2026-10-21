@@ -24,8 +24,8 @@ check_hciconfig() {
         echo "hci0 not found or not available."
     fi
 
-    if ifconfig wlan0 >/dev/null 2>&1; then
-        ifconfig wlan0 up
+    if [ -d /sys/class/net/wlan0 ]; then
+        ip link set wlan0 up
         udhcpc -i wlan0 -b >/dev/null 2>&1 &
     fi
 }
