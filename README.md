@@ -49,7 +49,7 @@ Features are space-separated tokens passed via `LUCKFOX_FEATURES` (in `local.con
 | --- | --- |
 | `camera` | MIPI CSI camera stack (SC3336 sensor, CIF, ISP1) |
 | `rtl8723bs` | Realtek RTL8723BS WiFi via SDIO (rtw88 driver package, WiFi only), SDIO ID `024c:b723` |
-| `npu` | Rockchip RV1106 NPU kernel driver (rknpu) |
+| `npu` | Rockchip NPU kernel driver (rknpu), RV1103 and RV1106 |
 | `vcodec` | VPU/VIDEO codec kernel drivers (RGA, VDEC) |
 
 **Examples:**
@@ -72,7 +72,7 @@ Features are not split into extra machines: camera support and the USB serial co
 - [x] USB host and gadget support
 - [x] Camera serial interface (SC3336) on all boards
 - [x] Vision processor (VPU): RGA, ISP, VEPU/VDPU, VICAP
-- [ ] NPU (RKNN): no RV1103/RV1106 driver in the mainline kernel, see below
+- [x] NPU kernel driver (rknpu, RV1103 and RV1106); userspace runtime not yet packaged, see below
 - [x] WiFi (RTL8723BS, optional `rtl8723bs` feature) on boards with an SDIO slot
 - [ ] RAUC support for SD card
 - [ ] RAUC support for NAND
@@ -142,6 +142,37 @@ Enable the `rtl8723bs` feature for boards with an RTL8723BS module (SDIO ID
 SDIO WiFi interface with `mmc-pwrseq = <&sdio_pwrseq>` and reset GPIO
 `gpio1 RK_PA2`, while `&sdio` (mmc2) stays the SD card slot.
 
+The `rtl8723bs-driver` recipe builds the out-of-tree rtw88 modules
+(`rtw_core`, `rtw_sdio`, `rtw_8723x`, `rtw_8723b`, `rtw_8723bs`) from
+[MocLG/rtw88-rtl8723bs](https://github.com/MocLG/rtw88-rtl8723bs) at a pinned
+commit, and installs the `rtw8723b_fw.bin` firmware. It carries a patch that
+removes a per-scan debug message that would otherwise flood the console. The
+`rtl8723bs-init` recipe installs `/etc/init.d/rtl8723bs-init`, which loads the
+driver and brings up `wlan0`. If `/etc/wpa_supplicant.conf` exists, it also
+starts `wpa_supplicant` and DHCP.
+
+To connect, create `/etc/wpa_supplicant.conf` on the board (mode `600`):
+
+```
+ctrl_interface=/var/run/wpa_supplicant
+update_config=1
+country=US
+
+network={
+    ssid="your Wi-Fi name"
+    psk="your Wi-Fi password"
+    key_mgmt=WPA-PSK
+}
+```
+
+Then run `/etc/init.d/rtl8723bs-init restart` and check `wpa_cli -i wlan0 status`.
+The module is 2.4 GHz only. Do not start `wpa_supplicant` by hand while the
+init script's instance is running.
+
+Known cosmetic message: the kernel logs `Driver 'rtw_8723bs' needs updating -
+please use bus_type methods` at module load. It comes from the driver setting
+its own `.shutdown` handler and does not affect operation.
+
 ### Vision processor (VPU/NPU)
 
 The RV1103/RV1106 vision processor is supported through the following kernel
@@ -158,10 +189,13 @@ The machine configs pull in the kernel modules via
 when `ENABLE_STATELESS_VPU_GST` is set (default `1`), so VPU-accelerated
 encode/decode is available through GStreamer.
 
-The `npu` feature builds and installs the Rockchip `rknpu` driver for RV1106
-boards and enables the NPU device-tree node. The driver is sourced from the
-Luckfox Buildroot kernel and integrated with the DRM GEM allocator provided by
-this kernel. RV1103G NPU support is not included by the available driver source.
+The `npu` feature builds and installs the Rockchip `rknpu` driver and enables
+the NPU device-tree node (`rockchip,rv1106-rknpu` at `0xff660000`). RV1103 boards
+inherit the node from `rv1106.dtsi`, and the Luckfox vendor kernel binds both
+chips to the same driver, so the feature applies to RV1103 and RV1106 machines.
+The driver is sourced from the Luckfox Buildroot kernel and integrated with the
+DRM GEM allocator provided by this kernel. After boot, check it with
+`lsmod | grep rknpu` and `dmesg | grep -i rknpu`.
 
 Userspace libraries (`librga`, `libmpp`, `librkaiq`, `librknnmrt`) and the
 `rkadk` media framework are provided by the buildroot variant at

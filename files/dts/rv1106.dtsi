@@ -705,6 +705,7 @@
 			compatible = "rockchip,rv1106-rknpu";
 			reg = <0xff660000 0x10000>;
 			interrupts = <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "npu_irq";
 			clocks = <&cru ACLK_RKNN>, <&cru HCLK_RKNN>;
 			clock-names = "aclk", "hclk";
 			assigned-clocks = <&cru ACLK_RKNN>;

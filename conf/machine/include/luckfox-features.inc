@@ -50,9 +50,10 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:rtl8723bs = " \
 # ---------------------------------------------------------------------------
 # npu: Rockchip NPU kernel driver
 # ---------------------------------------------------------------------------
-# RV1106 only: the imported vendor driver does not include RV1103 support.
+# Used on both RV1103 and RV1106: the vendor kernel binds both to rockchip,rv1106-rknpu.
 MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:npu = " \
     kernel-module-rknpu \
+    librknnmrt \
 "
 
 # ---------------------------------------------------------------------------
