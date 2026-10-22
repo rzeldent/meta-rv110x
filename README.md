@@ -72,7 +72,7 @@ Features are not split into extra machines: camera support and the USB serial co
 - [x] USB host and gadget support
 - [x] Camera serial interface (SC3336) on all boards
 - [x] Vision processor (VPU): RGA, ISP, VEPU/VDPU, VICAP
-- [x] NPU kernel driver (rknpu, RV1103 and RV1106); userspace runtime not yet packaged, see below
+- [x] NPU kernel driver (rknpu, RV1103 and RV1106); `librknnmrt` runtime packaged
 - [x] WiFi (RTL8723BS, optional `rtl8723bs` feature) on boards with an SDIO slot
 - [ ] RAUC support for SD card
 - [ ] RAUC support for NAND
@@ -195,9 +195,17 @@ inherit the node from `rv1106.dtsi`, and the Luckfox vendor kernel binds both
 chips to the same driver, so the feature applies to RV1103 and RV1106 machines.
 The driver is sourced from the Luckfox Buildroot kernel and integrated with the
 DRM GEM allocator provided by this kernel. After boot, check it with
-`lsmod | grep rknpu` and `dmesg | grep -i rknpu`.
+`dmesg | grep -i rknpu` (expect `Initialized rknpu 0.9.2`) and
+`cat /sys/kernel/debug/rknpu/version`. The "iommu device-tree entry not found,
+using non-iommu mode" message is normal on RV1103.
 
-Userspace libraries (`librga`, `libmpp`, `librkaiq`, `librknnmrt`) and the
+The feature also installs `librknnmrt` (RKNN runtime 1.6.0, glibc build from the
+Luckfox SDK) in `/usr/lib` and the RKNN API headers (`rknn_api.h`,
+`rknn_custom_op.h`, `rknn_matmul_api.h`) in the SDK. Models must be converted
+with a matching RKNN-Toolkit2 1.6.0 and target `rv1106`; the runtime must match
+the driver (0.9.2). Check the licence terms before redistributing images.
+
+Other userspace libraries (`librga`, `libmpp`, `librkaiq`) and the
 `rkadk` media framework are provided by the buildroot variant at
 `/home/rene/repos/luckfox-pico` but are not yet packaged as Yocto recipes in
 this layer (they require network access to build from upstream rockchip-linux
