@@ -15,6 +15,8 @@ SRC_URI += " \
     file://rv1103g-luckfox-pico-mini-a.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1103g-luckfox-pico-mini-b.dts;subdir=${P}/arch/arm/dts/ \
     file://rv1103g-luckfox-pico-mini.dtsi;subdir=${P}/arch/arm/dts/ \
+    file://rv1103g-luckfox-pico-sd-wifi.dtsi;subdir=${P}/arch/arm/dts/ \
+    file://rv1103g-luckfox-pico-sd-slot.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1106-camera.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1103g.dtsi;subdir=${P}/arch/arm/dts/ \
     file://rv1106-luckfox-pico.dts;subdir=${P}/arch/arm/dts/ \
@@ -42,6 +44,17 @@ SRC_URI += " \
     file://luckfox-pico-max-rv1106_defconfig;subdir=${P}/configs/ \
 "
 
+# The board dts files include rv1103g-luckfox-pico-sdio.dtsi, which is
+# selected from the same variants the kernel recipe uses.
+do_unpack[postfuncs] += "rv110x_select_sdio_dtsi"
+rv110x_select_sdio_dtsi() {
+    dts_dir="${UNPACKDIR}/${P}/arch/arm/dts"
+    if [ "${@bb.utils.contains_any('LUCKFOX_FEATURES', 'rtl8723bs', '1', '0', d)}" = "1" ]; then
+        cp ${dts_dir}/rv1103g-luckfox-pico-sd-wifi.dtsi ${dts_dir}/rv1103g-luckfox-pico-sdio.dtsi
+    else
+        cp ${dts_dir}/rv1103g-luckfox-pico-sd-slot.dtsi ${dts_dir}/rv1103g-luckfox-pico-sdio.dtsi
+    fi
+}
 
 # ---------------------------------------------------------------------------
 # Saveable U-Boot environment (MACHINE_FEATURES += "rk-u-boot-env")

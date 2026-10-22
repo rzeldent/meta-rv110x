@@ -711,7 +711,7 @@
 			assigned-clock-rates = <420000000>;
 			resets = <&cru SRST_A_RKNN>, <&cru SRST_H_RKNN>;
 			reset-names = "srst_a", "srst_h";
-			status = "disabled";
+			status = "okay";
 		};
 
 		rga2: rga@ff980000 {

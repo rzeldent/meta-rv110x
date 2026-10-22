@@ -11,9 +11,6 @@ MACHINE_EXTRA_RRECOMMENDS += "kernel-modules"
 # Base MACHINE_FEATURES common to all Luckfox boards
 MACHINE_FEATURES += "usbhost usbgadget wifi bluetooth"
 
-# The AIC8800DC feature pulls in its own deps via luckfox-features.inc
-# but we keep the feature enabled by default in LUCKFOX_FEATURES
-
 # Serial consoles: ttyS2 (UART) + ttyGS0 (USB gadget)
 SERIAL_CONSOLES = "115200;ttyS2 115200;ttyGS0"
 

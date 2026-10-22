@@ -6,17 +6,15 @@
 #
 # Supported features:
 #   camera      - MIPI CSI camera stack (SC3336 sensor, CIF, ISP1)
-#   aic8800dc   - AIC8800DC WiFi/BT via SDIO (kernel modules, firmware, init, wpa-supplicant, bluez5)
+#   rtl8723bs   - Realtek RTL8723BS WiFi via SDIO (rtw88 out-of-tree driver)
 #   npu         - Rockchip NPU kernel driver (rknpu)
 #   vcodec      - VPU/VIDEO codec kernel drivers (RGA, VDEC)
 #   nand-mtd    - SPI NAND exposed as MTD (for Mini B SD card variant with NAND populated)
 #
 # Example:
-#   LUCKFOX_FEATURES = "camera aic8800dc npu vcodec"
+#   LUCKFOX_FEATURES = "camera rtl8723bs npu vcodec"
 #   MACHINE = "luckfox-pico-max-spi-nand"
-#
-# The default enables everything that was previously mandatory.
-LUCKFOX_FEATURES ?= "camera aic8800dc npu vcodec"
+LUCKFOX_FEATURES ?= "camera npu vcodec"
 
 # Add features to MACHINE_FEATURES so they can be tested with bb.utils.contains
 MACHINE_FEATURES += "${LUCKFOX_FEATURES}"
@@ -36,29 +34,26 @@ MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:camera = " \
 "
 
 # ---------------------------------------------------------------------------
-# aic8800dc: AIC8800DC WiFi/BT via SDIO
+# rtl8723bs: Realtek RTL8723BS WiFi via SDIO (out-of-tree rtw88 driver).
 # ---------------------------------------------------------------------------
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:aic8800dc = " \
-    kernel-module-aic8800-bsp \
-    kernel-module-aic8800-fdrv \
-    kernel-module-aic8800-btlpm \
-    aic8800dc-firmware \
-    aic8800dc-init \
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:rtl8723bs = " \
+    kernel-module-rtw-core \
+    kernel-module-rtw-8723x \
+    kernel-module-rtw-8723b \
+    kernel-module-rtw-sdio \
+    kernel-module-rtw-8723bs \
+    rtl8723bs-firmware \
+    rtl8723bs-init \
     wpa-supplicant \
-    bluez5 \
 "
 
 # ---------------------------------------------------------------------------
 # npu: Rockchip NPU kernel driver
 # ---------------------------------------------------------------------------
-# The mainline kernel has no RV1103/RV1106 NPU driver. The only in-tree
-# candidate, drivers/accel/rocket, is RK3588-only and gated on ARM64, and the
-# vendor driver (drivers/rknpu in the 5.10 buildroot tree) has not been ported
-# to this kernel. The feature is therefore accepted but currently pulls in
-# nothing, so that existing LUCKFOX_FEATURES lists keep working.
-#MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:npu = " \
-#    kernel-module-rockchip-rknpu \
-#"
+# RV1106 only: the imported vendor driver does not include RV1103 support.
+MACHINE_ESSENTIAL_EXTRA_RDEPENDS:append:npu = " \
+    kernel-module-rknpu \
+"
 
 # ---------------------------------------------------------------------------
 # vcodec: VPU/VIDEO codec kernel drivers (RGA, VDEC)

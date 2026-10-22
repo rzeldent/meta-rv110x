@@ -76,16 +76,7 @@
 	status = "okay";
 };
 
-&sdmmc {
-	max-frequency = <50000000>;
-	no-sdio;
-	no-mmc;
-	bus-width = <4>;
-	cap-mmc-highspeed;
-	cap-sd-highspeed;
-	disable-wp;
-	status = "okay";
-};
+#include "rv1103g-luckfox-pico-sdio.dtsi"
 
 &sfc {
 	status = "okay";

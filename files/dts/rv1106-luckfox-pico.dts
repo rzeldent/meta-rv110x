@@ -25,6 +25,8 @@
 	status = "okay";
 };
 
+#include "rv1103g-luckfox-pico-sdio.dtsi"
+
 &sfc {
 	status = "okay";
 

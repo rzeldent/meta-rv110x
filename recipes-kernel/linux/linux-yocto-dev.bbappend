@@ -30,6 +30,7 @@ SRC_URI += " \
     file://0015-media-i2c-add-smartsens-sc3336-sensor.patch \
     file://0016-phy-rockchip-add-csi2-dphy-driver.patch \
     file://0018-media-rockchip-add-vendor-cif-stack.patch \
+    file://0019-drivers-add-rockchip-rknpu.patch \
     file://apply-rv-optimizations.cfg \
     file://enable-rv-specific-drivers.cfg \
     file://remove-crypto-drivers.cfg \
@@ -49,6 +50,7 @@ SRC_URI += " \
     file://rfkill-wlan.h \
     file://phy-rockchip-csi2-dphy-common.h \
     file://rkcif-vendor/ \
+    file://rknpu/ \
     file://phy-rockchip-csi2-dphy-hw.c \
     file://phy-rockchip-csi2-dphy.c \
     file://phy-rockchip-samsung-dcphy.h \
@@ -60,6 +62,8 @@ SRC_URI += " \
     file://rv1103g-luckfox-pico-mini-a.dts \
     file://rv1103g-luckfox-pico-mini-b.dts \
     file://rv1103g-luckfox-pico-mini.dtsi \
+    file://rv1103g-luckfox-pico-sd-wifi.dtsi \
+    file://rv1103g-luckfox-pico-sd-slot.dtsi \
     file://rv1106-camera.dtsi \
     file://rv1103g.dtsi \
     file://rv1106-luckfox-pico.dts \
@@ -81,6 +85,7 @@ do_patch:append() {
     cp ${UNPACKDIR}/rk-preisp.h ${S}/include/uapi/linux/
     cp ${UNPACKDIR}/sc3336.c ${S}/drivers/media/i2c/
     cp -r ${UNPACKDIR}/rkcif-vendor ${S}/drivers/media/platform/rockchip/
+    cp -r ${UNPACKDIR}/rknpu ${S}/drivers/
     install -d ${S}/include/soc/rockchip ${S}/include/linux/soc/rockchip
     install -d ${S}/include/dt-bindings/soc
     cp ${UNPACKDIR}/rkcif-vendor/include/rockchip-system-status-dt.h ${S}/include/dt-bindings/soc/rockchip-system-status.h
@@ -98,6 +103,11 @@ do_patch:append() {
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-a.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini-b.dts ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g-luckfox-pico-mini.dtsi ${S}/arch/arm/boot/dts/rockchip/
+    if [ "${@bb.utils.contains_any('LUCKFOX_FEATURES', 'rtl8723bs', '1', '0', d)}" = "1" ]; then
+        cp ${UNPACKDIR}/rv1103g-luckfox-pico-sd-wifi.dtsi ${S}/arch/arm/boot/dts/rockchip/rv1103g-luckfox-pico-sdio.dtsi
+    else
+        cp ${UNPACKDIR}/rv1103g-luckfox-pico-sd-slot.dtsi ${S}/arch/arm/boot/dts/rockchip/rv1103g-luckfox-pico-sdio.dtsi
+    fi
     cp ${UNPACKDIR}/rv1106-camera.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1103g.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rv1106-luckfox-pico.dts ${S}/arch/arm/boot/dts/rockchip/
@@ -110,3 +120,5 @@ do_patch:append() {
     cp ${UNPACKDIR}/rv1106.dtsi ${S}/arch/arm/boot/dts/rockchip/
     cp ${UNPACKDIR}/rfkill-wlan.h ${S}/include/linux/
 }
+
+SRC_URI:append:npu = " file://enable-rknpu.cfg"

@@ -1,0 +1,43 @@
+From: Luckfox Yocto maintainers
+Subject: [PATCH] rtw88: remove per-scan SDIO interrupt info logging
+
+This temporary diagnostic prints continually while the interface scans,
+flooding the serial console on normal operation.
+
+Upstream-Status: Pending
+
+---
+ sdio.c | 12 ------------
+ 1 file changed, 12 deletions(-)
+
+diff --git a/sdio.c b/sdio.c
+index 1111111..2222222 100644
+--- a/sdio.c
++++ b/sdio.c
+@@ -2357,24 +2357,12 @@ static void rtw_sdio_handle_interrupt(struct sdio_func *sdio_func)
+ 	u32 clear;
+ 	u32 hisr;
+-	static int scan_irq_count = 0;
+ 
+ 	rtwdev = hw->priv;
+ 	rtwsdio = (struct rtw_sdio *)rtwdev->priv;
+ 
+ 	rtwsdio->irq_thread = current;
+ 
+ 	hisr = rtw_read32(rtwdev, REG_SDIO_HISR);
+-
+-	/* Log all interrupts during scan */
+-	if (test_bit(RTW_FLAG_SCANNING, rtwdev->flags)) {
+-		scan_irq_count++;
+-		if (scan_irq_count <= 10 || scan_irq_count % 20 == 0)
+-			pr_info("RTW88 IRQ during scan #%d: HISR=0x%08x (RX=%d AVAL=%d C2H=%d)\n",
+-				scan_irq_count, hisr,
+-				!!(hisr & REG_SDIO_HISR_RX_REQUEST),
+-				!!(hisr & REG_SDIO_HISR_AVAL),
+-				!!(hisr & REG_SDIO_HISR_C2HCMD));
+-	}
+ 
+ 	if (hisr & REG_SDIO_HISR_TXERR)
+ 		rtw_sdio_tx_err_isr(rtwdev);
+-- 
+2.43.0

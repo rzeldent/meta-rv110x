@@ -1,0 +1,13 @@
+Upstream-Status: Inappropriate [board-specific networking configuration]
+
+Remove an interface wildcard that BusyBox ifupdown treats as a literal
+interface name.  eth0 already has an explicit DHCP configuration.
+
+--- a/interfaces
++++ b/interfaces
+@@ -21,4 +21 @@
+-# Busybox ifupdown won't process /en* correctly
+-auto /en*=eth
+-iface eth inet dhcp
+-
++# Configure Ethernet interfaces explicitly; BusyBox ifupdown does not expand globs.

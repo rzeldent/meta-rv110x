@@ -1,0 +1,23 @@
+ccflags-y += -DCONFIG_RTW88_LEDS=1
+ccflags-y += -DCONFIG_RTW88_DEBUG=1
+ccflags-y += -DCONFIG_RTW88_DEBUGFS=1
+ccflags-y += -D__CHECK_ENDIAN__
+
+obj-m += rtw_core.o
+rtw_core-objs := main.o led.o mac80211.o util.o debug.o tx.o rx.o mac.o phy.o coex.o efuse.o fw.o ps.o sec.o bf.o regd.o sar.o
+
+ifeq ($(CONFIG_PM),y)
+rtw_core-objs += wow.o
+endif
+
+obj-m += rtw_8723b.o
+rtw_8723b-objs := rtw8723b.o rtw8723b_table.o
+
+obj-m += rtw_8723bs.o
+rtw_8723bs-objs := rtw8723bs.o
+
+obj-m += rtw_8723x.o
+rtw_8723x-objs := rtw8723x.o
+
+obj-m += rtw_sdio.o
+rtw_sdio-objs := sdio.o

@@ -27,7 +27,7 @@ Rockchip boards based on RV1103/RV1106 using ported rockchip-linux sources.
 | [Luckfox Pico Plus](https://www.luckfox.com/EN-Luckfox-Pico-Plus.htm) | RV1103G | 64MB | 0.5TOPS, supports int4, int8 and int16 | Input 4M @30fps (Max) | SPI NAND FLASH (128MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, etc. |
 | [Luckfox Pico Pro](https://www.luckfox.com/EN-Luckfox-Pico-Pro) | RV1106G | 128MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | SPI NAND FLASH (256MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, RTC battery header, etc. |
 | [Luckfox Pico Max](https://www.luckfox.com/Luckfox-Pico-Max) | RV1106G | 256MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | SPI NAND FLASH (256MB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, RTC battery header, etc. |
-| [Luckfox Pico Pi](https://www.luckfox.com/Luckfox-Pico-Pi) | RV1106G | 128MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | eMMC (8GB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, WiFi 6/BT 5.2 (AIC8800DC), etc. |
+| [Luckfox Pico Pi](https://www.luckfox.com/Luckfox-Pico-Pi) | RV1106G | 128MB | 0.5TOPS, supports int4, int8 and int16 | Input 5M @30fps (Max) | eMMC (8GB) | Onboard Type-C port, MIPI CSI Interface, GPIO, Ethernet port, etc. |
 
 ## Machine configurations
 
@@ -43,13 +43,13 @@ There are 10 machines: each of the 5 boards comes in a `-sd-card` variant (SD ca
 
 ### Feature flags (`LUCKFOX_FEATURES`)
 
-Features are space-separated tokens passed via `LUCKFOX_FEATURES` (in `local.conf`, environment, or VS Code build configuration). The default is `camera aic8800dc npu vcodec`.
+Features are space-separated tokens passed via `LUCKFOX_FEATURES` (in `local.conf`, environment, or VS Code build configuration). The default is `camera npu vcodec`.
 
 | Feature | Description |
 | --- | --- |
 | `camera` | MIPI CSI camera stack (SC3336 sensor, CIF, ISP1) |
-| `aic8800dc` | AIC8800DC WiFi/BT via SDIO (kernel modules, firmware, init, wpa-supplicant, bluez5) |
-| `npu` | Rockchip NPU kernel driver (rknpu) |
+| `rtl8723bs` | Realtek RTL8723BS WiFi via SDIO (rtw88 driver package, WiFi only), SDIO ID `024c:b723` |
+| `npu` | Rockchip RV1106 NPU kernel driver (rknpu) |
 | `vcodec` | VPU/VIDEO codec kernel drivers (RGA, VDEC) |
 
 **Examples:**
@@ -57,9 +57,9 @@ Features are space-separated tokens passed via `LUCKFOX_FEATURES` (in `local.con
 - SPI NAND boot: `MACHINE=luckfox-pico-max-spi-nand`
 - Minimal build (no camera, no WiFi, no NPU): `MACHINE=luckfox-pico-sd-card LUCKFOX_FEATURES=""`
 
-The Mini A/B boards use a single machine configuration (`luckfox-pico-mini`) with the Mini B device tree (which includes the SPI NAND node). When booting from SD card, the NAND is exposed as MTD for updates. When booting from NAND, use the `-spi-nand` machine.
+For the Pico, Pico Plus, Pico Max, and Pico Mini, enabling `rtl8723bs` configures the SDMMC host for the SDIO WiFi module and its reset GPIO. Without this feature, the host is configured as a removable SD card slot.
 
-WiFi 6 (802.11ax) and Bluetooth 5.2 are provided by the AIC8800DC module, which plugs into the SD card slot and is driven over SDIO. Every machine in this layer installs the driver, firmware and init scripts when the `aic8800dc` feature is enabled (enabled by default), so the module works on any board that has the slot populated.
+The Mini A/B boards use a single machine configuration (`luckfox-pico-mini`) with the Mini B device tree (which includes the SPI NAND node). When booting from SD card, the NAND is exposed as MTD for updates. When booting from NAND, use the `-spi-nand` machine.
 
 Features are not split into extra machines: camera support and the USB serial console are part of every machine that can use them (controlled via `LUCKFOX_FEATURES`). Root filesystem auto-resize is installed only on SD card machines.
 
@@ -73,7 +73,7 @@ Features are not split into extra machines: camera support and the USB serial co
 - [x] Camera serial interface (SC3336) on all boards
 - [x] Vision processor (VPU): RGA, ISP, VEPU/VDPU, VICAP
 - [ ] NPU (RKNN): no RV1103/RV1106 driver in the mainline kernel, see below
-- [x] WiFi 6 / Bluetooth 5.2 (AIC8800DC) on all boards with an SD card slot
+- [x] WiFi (RTL8723BS, optional `rtl8723bs` feature) on boards with an SDIO slot
 - [ ] RAUC support for SD card
 - [ ] RAUC support for NAND
 - [ ] Support for some display controllers
@@ -135,35 +135,12 @@ line padded to a 256-byte boundary (`ALIGN(2304 * 10 / 8, 256) = 3072`), so a
 frame is `3072 * 1296 = 3981312` bytes. Use `media-ctl -p` to inspect the media
 graph and `cat /proc/rkcif-mipi-lvds` for the clock/error statistics.
 
-### WiFi 6 / Bluetooth 5.2 (AIC8800DC)
+### SDIO WiFi (RTL8723BS)
 
-The AIC8800DC module plugs into the SD card slot and is driven over SDIO. It is
-supported by the `aic8800dc` recipe, which builds three out-of-tree modules:
-
-| Module | Purpose |
-|--------|---------|
-| `aic8800_bsp` | SDIO bus glue and firmware download |
-| `aic8800_fdrv` | Full MAC 802.11ax driver |
-| `aic8800_btlpm` | Bluetooth low-power management |
-
-The driver source is taken from [radxa-pkg/aic8800](https://github.com/radxa-pkg/aic8800)
-(GPL-2.0), which is maintained against current kernels and already carries the
-`struct wireless_dev` migration that Linux 7.1 introduced for `cfg80211_ops`.
-The vendor driver shipped in the buildroot tree targets Linux 5.10 and does not
-compile against this layer's kernel.
-
-Firmware is installed to `/lib/firmware/aic8800_fw/SDIO/aic8800DC`, which is
-where the driver looks for it. The `aic8800dc-init` recipe installs
-`/etc/init.d/hciinit` (started as `S99hciinit`), which loads the modules through
-`/etc/wifi/wifi_bt_init.sh`, attaches the Bluetooth HCI transport on UART1 at
-1500000 baud and brings up `wlan0`.
-
-The device tree wires the module up as follows:
-
-* `&sdmmc` (mmc1) is the SDIO WiFi interface, with `mmc-pwrseq = <&sdio_pwrseq>`
-  and reset GPIO `gpio1 RK_PA2`.
-* `&sdio` (mmc2) stays the SD card slot (`no-sdio`, `supports-sd`).
-* `&uart1` carries Bluetooth, with RTS on `gpio0 RK_PA5`.
+Enable the `rtl8723bs` feature for boards with an RTL8723BS module (SDIO ID
+`024c:b723`) in the SD card slot. In the device tree, `&sdmmc` (mmc1) is the
+SDIO WiFi interface with `mmc-pwrseq = <&sdio_pwrseq>` and reset GPIO
+`gpio1 RK_PA2`, while `&sdio` (mmc2) stays the SD card slot.
 
 ### Vision processor (VPU/NPU)
 
@@ -181,12 +158,10 @@ The machine configs pull in the kernel modules via
 when `ENABLE_STATELESS_VPU_GST` is set (default `1`), so VPU-accelerated
 encode/decode is available through GStreamer.
 
-The NPU is **not** available in this layer. The mainline kernel has no
-RV1103/RV1106 NPU driver: the only in-tree candidate, `drivers/accel/rocket`,
-targets RK3588 and is gated on `ARM64`, and the vendor `drivers/rknpu` driver
-from the 5.10 buildroot tree has not been ported to this kernel. The `npu`
-feature flag is still accepted so that existing `LUCKFOX_FEATURES` lists keep
-working, but it currently pulls in nothing.
+The `npu` feature builds and installs the Rockchip `rknpu` driver for RV1106
+boards and enables the NPU device-tree node. The driver is sourced from the
+Luckfox Buildroot kernel and integrated with the DRM GEM allocator provided by
+this kernel. RV1103G NPU support is not included by the available driver source.
 
 Userspace libraries (`librga`, `libmpp`, `librkaiq`, `librknnmrt`) and the
 `rkadk` media framework are provided by the buildroot variant at
