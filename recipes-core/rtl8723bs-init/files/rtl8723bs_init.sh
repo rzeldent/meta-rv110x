@@ -28,8 +28,8 @@ start() {
 }
 
 stop() {
-    pkill -f "udhcpc -i wlan0"
-    pkill -f wpa_supplicant
+    killall -q udhcpc
+    killall -q wpa_supplicant
     [ -d /sys/class/net/wlan0 ] && ip link set dev wlan0 down
     rmmod rtw_8723bs 2>/dev/null
 }
