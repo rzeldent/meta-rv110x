@@ -6927,7 +6927,7 @@ static int rkcif_fh_open(struct file *filp)
 	if (!ret) {
 		mutex_lock(&cifdev->stream_lock);
 		ret = v4l2_pipeline_pm_get(&vnode->vdev.entity);
-		v4l2_info(vdev, "open video, entity use_countt %d\n",
+		v4l2_info(vdev, "open video, entity use_count %d\n",
 			  vnode->vdev.entity.use_count);
 		mutex_unlock(&cifdev->stream_lock);
 		if (ret < 0)
