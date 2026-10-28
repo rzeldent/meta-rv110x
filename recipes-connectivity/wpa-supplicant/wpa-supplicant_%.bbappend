@@ -5,3 +5,5 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/wpa-supplicant:"
 do_install:append() {
     install -m 600 ${UNPACKDIR}/wpa_supplicant.conf ${D}${sysconfdir}/wpa_supplicant.conf
 }
+# rkipc links against libwpa_client.a
+DISABLE_STATIC = ""
