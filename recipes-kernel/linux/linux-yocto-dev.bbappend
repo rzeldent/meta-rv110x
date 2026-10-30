@@ -27,7 +27,6 @@ SRC_URI += " \
     file://0012-dt-bindings-phy-rockchip-inno-usb2phy-add-rv1103.patch \
     file://0013-phy-rockchip-inno-usb2-add-usb2-phy-support-for-rv1103.patch \
     file://0014-phy-rockchip-inno-usb2-fix-locate-usbgrf.patch \
-    file://0015-media-i2c-add-smartsens-sc3336-sensor.patch \
     file://0016-phy-rockchip-add-csi2-dphy-driver.patch \
     file://0018-media-rockchip-add-vendor-cif-stack.patch \
     file://0019-drivers-add-rockchip-rknpu.patch \
@@ -58,7 +57,6 @@ SRC_URI += " \
     file://rk-camera-module.h \
     file://rk-preisp.h \
     file://rk-video-format.h \
-    file://sc3336.c \
     file://rv1103g-luckfox-pico-mini-a.dts \
     file://rv1103g-luckfox-pico-mini-b.dts \
     file://rv1103g-luckfox-pico-mini.dtsi \
@@ -83,7 +81,6 @@ do_patch:append() {
     cp ${UNPACKDIR}/rk-camera-module.h ${S}/include/uapi/linux/
     cp ${UNPACKDIR}/rk-video-format.h ${S}/include/uapi/linux/
     cp ${UNPACKDIR}/rk-preisp.h ${S}/include/uapi/linux/
-    cp ${UNPACKDIR}/sc3336.c ${S}/drivers/media/i2c/
     cp -r ${UNPACKDIR}/rkcif-vendor ${S}/drivers/media/platform/rockchip/
     cp -r ${UNPACKDIR}/rknpu ${S}/drivers/
     install -d ${S}/include/soc/rockchip ${S}/include/linux/soc/rockchip
